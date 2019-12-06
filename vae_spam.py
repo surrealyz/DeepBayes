@@ -30,12 +30,12 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     if vae_type == 'E': 
         from conv_generator_mnist_E import generator
     if vae_type == 'F': 
-        from conv_generator_mnist_F import generator
+        from conv_generator_spam_F import generator
     if vae_type == 'G': 
         from conv_generator_mnist_G import generator
     from conv_encoder_mnist import encoder_gaussian as encoder
-    shape_high = (28, 28)
-    input_shape = (28, 28, 1)
+    #shape_high = (28, 28)
+    input_shape = (25, 1)
     n_channel = 64
 
     # then define model
@@ -49,8 +49,8 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     fit, eval_acc = construct_optimizer(X_ph, Y_ph, [enc_conv, enc_mlp], dec, ll, K, vae_type)
     
     # load data
-    from utils_mnist import data_mnist
-    X_train, Y_train, X_test, Y_test = data_mnist(train_start=0, train_end=295870,
+    from utils_spam import data_spam
+    X_train, Y_train, X_test, Y_test = data_spam(train_start=0, train_end=295870,
                                                   test_start=0, test_end=126082)
  
     # initialise sessions

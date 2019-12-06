@@ -37,8 +37,8 @@ def data_spam(datadir='/home/yz/code/trees/twitter_spam/', train_start=0, train_
     X_test = X_test[test_start:test_end]
     Y_test = Y_test[test_start:test_end]
 
-    print('X_train shape:', X_train.shape)
-    print('X_test shape:', X_test.shape)
+    print('Spam X_train shape:', X_train.shape)
+    print('Spam X_test shape:', X_test.shape)
 
     return X_train, Y_train, X_test, Y_test
 
