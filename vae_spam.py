@@ -30,7 +30,7 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     # if vae_type == 'E':
     #     from conv_generator_mnist_E import generator
     if vae_type == 'F': 
-        from mlp_generator_spam_F import generator
+        from models.mlp_generator_spam_F import generator
     # if vae_type == 'G':
     #     from models.conv_generator_mnist_G import generator
     # from conv_encoder_mnist import encoder_gaussian as encoder
