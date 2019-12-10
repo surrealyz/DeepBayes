@@ -19,21 +19,22 @@ checkpoint = -1
 def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     dimY = 10
 
-    if vae_type == 'A': 
-        from conv_generator_mnist_A import generator
-    if vae_type == 'B': 
-        from conv_generator_mnist_B import generator
-    if vae_type == 'C': 
-        from conv_generator_mnist_C import generator
-    if vae_type == 'D': 
-        from conv_generator_mnist_D import generator
-    if vae_type == 'E': 
-        from conv_generator_mnist_E import generator
+    # if vae_type == 'A':
+    #     from conv_generator_mnist_A import generator
+    # if vae_type == 'B':
+    #     from conv_generator_mnist_B import generator
+    # if vae_type == 'C':
+    #     from conv_generator_mnist_C import generator
+    # if vae_type == 'D':
+    #     from conv_generator_mnist_D import generator
+    # if vae_type == 'E':
+    #     from conv_generator_mnist_E import generator
     if vae_type == 'F': 
-        from conv_generator_spam_F import generator
-    if vae_type == 'G': 
-        from conv_generator_mnist_G import generator
-    from conv_encoder_mnist import encoder_gaussian as encoder
+        from mlp_generator_spam_F import generator
+    # if vae_type == 'G':
+    #     from models.conv_generator_mnist_G import generator
+    # from conv_encoder_mnist import encoder_gaussian as encoder
+    from models.mlp_encoder_spam import encoder_gaussian as encoder
     #shape_high = (28, 28)
     input_shape = (25, 1)
     n_channel = 64
