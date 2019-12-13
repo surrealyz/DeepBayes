@@ -17,8 +17,12 @@ K = 1
 checkpoint = -1
 
 def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
-    dimY = 10
-
+    # load data
+    from utils_spam import data_spam
+    X_train, Y_train, X_test, Y_test = data_spam(train_start=0, train_end=295870,
+                                                  test_start=0, test_end=126082)
+    dimY = 1
+ 
     # if vae_type == 'A':
     #     from conv_generator_mnist_A import generator
     # if vae_type == 'B':
@@ -30,30 +34,26 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     # if vae_type == 'E':
     #     from conv_generator_mnist_E import generator
     if vae_type == 'F': 
-        from models.mlp_generator_spam_F import generator
+        from mlp_generator_spam_F import generator
     # if vae_type == 'G':
     #     from models.conv_generator_mnist_G import generator
     # from conv_encoder_mnist import encoder_gaussian as encoder
-    from models.mlp_encoder_spam import encoder_gaussian as encoder
-    #shape_high = (28, 28)
-    input_shape = (25, 1)
-    n_channel = 64
+    from mlp_encoder_spam import encoder_gaussian as encoder
+    input_shape = X_train[0].shape
+    dimX = input_shape[0]
 
     # then define model
-    dec = generator(input_shape, dimH, dimZ, dimY, n_channel, 'sigmoid', 'gen')
-    enc, enc_conv, enc_mlp = encoder(input_shape, dimH, dimZ, dimY, n_channel, 'enc')
-    
+    dec = generator(dimX, dimH, dimZ, dimY, 'linear', 'gen')
+    n_layers_enc = 2
+    enc = encoder(dimX, dimH, dimZ, dimY, n_layers_enc, 'enc')
+
     # define optimisers
     X_ph = tf.placeholder(tf.float32, shape=(batch_size,)+input_shape)
     Y_ph = tf.placeholder(tf.float32, shape=(batch_size, dimY))
     ll = 'l2'
-    fit, eval_acc = construct_optimizer(X_ph, Y_ph, [enc_conv, enc_mlp], dec, ll, K, vae_type)
-    
-    # load data
-    from utils_spam import data_spam
-    X_train, Y_train, X_test, Y_test = data_spam(train_start=0, train_end=295870,
-                                                  test_start=0, test_end=126082)
- 
+    identity = lambda x: x
+    fit, eval_acc = construct_optimizer(X_ph, Y_ph, [identity, enc], dec, ll, K, vae_type)
+
     # initialise sessions
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
@@ -74,7 +74,7 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     checkpoint += 1
   
     # now start fitting 
-    n_iter_ = min(n_iter,20)
+    n_iter_ = min(n_iter,10)
     beta = 1.0
     for i in range(int(n_iter/n_iter_)):
         fit(sess, X_train, Y_train, n_iter_, lr, beta)

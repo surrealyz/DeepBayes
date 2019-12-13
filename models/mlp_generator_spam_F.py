@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from models.mlp import mlp_layer
+from mlp import mlp_layer
 
 """
 generator p(z)p(x|z)p(y|z)
