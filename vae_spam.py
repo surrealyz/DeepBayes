@@ -21,6 +21,8 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     from utils_spam import data_spam
     X_train, Y_train, X_test, Y_test = data_spam(train_start=0, train_end=295870,
                                                   test_start=0, test_end=126082)
+    Y_train = Y_train.reshape(295870, 1)
+    Y_test = Y_test.reshape(126082, 1)
     dimY = 1
  
     # if vae_type == 'A':
@@ -41,6 +43,8 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     from mlp_encoder_spam import encoder_gaussian as encoder
     input_shape = X_train[0].shape
     dimX = input_shape[0]
+    print('input_shape:', input_shape)
+    print('dimX:', dimX)
 
     # then define model
     dec = generator(dimX, dimH, dimZ, dimY, 'linear', 'gen')
@@ -50,6 +54,11 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     # define optimisers
     X_ph = tf.placeholder(tf.float32, shape=(batch_size,)+input_shape)
     Y_ph = tf.placeholder(tf.float32, shape=(batch_size, dimY))
+    print('X_ph.shape:', X_ph.shape)
+    print('Y_ph.shape:', Y_ph.shape)
+    print('X_train.shape:', X_train.shape)
+    print('Y_train.shape:', Y_train.shape)
+
     ll = 'l2'
     identity = lambda x: x
     fit, eval_acc = construct_optimizer(X_ph, Y_ph, [identity, enc], dec, ll, K, vae_type)
@@ -73,16 +82,20 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
         load_params(sess, filename, checkpoint)
     checkpoint += 1
   
+    import keras.backend
+    keras.backend.set_session(sess)
+    keras.backend.set_learning_phase(0)
+
     # now start fitting 
     n_iter_ = min(n_iter,10)
     beta = 1.0
     for i in range(int(n_iter/n_iter_)):
         fit(sess, X_train, Y_train, n_iter_, lr, beta)
         # print training and test accuracy
-        eval_acc(sess, X_test, Y_test, 'test')
+        eval_acc(sess, X_test, Y_test, 'test', beta)
 
     # save param values
-    save_params(sess, filename, checkpoint) 
+    save_params(sess, filename, checkpoint, scope = 'vae') 
     checkpoint += 1
 
 if __name__ == '__main__':
