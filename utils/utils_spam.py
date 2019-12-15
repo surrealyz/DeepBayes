@@ -7,6 +7,8 @@ import numpy as np
 import sys
 import warnings
 
+import os, socket
+
 
 def data_spam(datadir='/home/yz/code/trees/twitter_spam/', train_start=0, train_end=295870, test_start=0,
                test_end=126082):
@@ -24,6 +26,9 @@ def data_spam(datadir='/home/yz/code/trees/twitter_spam/', train_start=0, train_
     assert isinstance(train_end, int)
     assert isinstance(test_start, int)
     assert isinstance(test_end, int)
+
+    if socket.gethostname() == 'deep':
+        datadir = '/home/mcz/Desktop/courses_2019F/DavidBlei/Project'
     
     train = np.loadtxt(datadir+"twitter_spam_reduced.train.csv", delimiter=",")
     test = np.loadtxt(datadir+"twitter_spam_reduced.train.csv", delimiter=",")
