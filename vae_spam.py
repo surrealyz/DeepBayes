@@ -21,9 +21,9 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     from utils_spam import data_spam
     X_train, Y_train, X_test, Y_test = data_spam(train_start=0, train_end=295870,
                                                   test_start=0, test_end=126082)
-    Y_train = Y_train.reshape(295870, 1)
-    Y_test = Y_test.reshape(126082, 1)
-    dimY = 1
+    print(X_train[0])
+    print(Y_train[0])
+    dimY = Y_train.shape[1]
  
     # if vae_type == 'A':
     #     from conv_generator_mnist_A import generator

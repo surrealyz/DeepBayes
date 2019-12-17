@@ -9,6 +9,15 @@ import warnings
 
 import os, socket
 
+def to_categorical(y, num_classes=None):
+    y = np.array(y, dtype='int').ravel()
+    if not num_classes:
+        num_classes = np.max(y) + 1
+    n = y.shape[0]
+    categorical = np.zeros((n, num_classes))
+    categorical[np.arange(n), y] = 1
+    return categorical
+
 
 def data_spam(datadir='/home/yz/code/trees/twitter_spam/', train_start=0, train_end=295870, test_start=0,
                test_end=126082):
@@ -41,7 +50,10 @@ def data_spam(datadir='/home/yz/code/trees/twitter_spam/', train_start=0, train_
     Y_train = Y_train[train_start:train_end]
     X_test = X_test[test_start:test_end]
     Y_test = Y_test[test_start:test_end]
-
+    
+    Y_train = to_categorical(Y_train, 2)
+    Y_test = to_categorical(Y_test, 2)
+ 
     print('Spam X_train shape:', X_train.shape)
     print('Spam X_test shape:', X_test.shape)
 
