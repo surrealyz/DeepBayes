@@ -8,8 +8,8 @@ from utils import load_data, save_params, load_params, init_variables
 from visualisation import plot_images
 from alg.vae_new import construct_optimizer
 
-dimZ = 256
-dimH = 512
+dimZ = 512
+dimH = 1024
 n_iter = 100
 batch_size = 1000
 lr = 1e-4
@@ -20,6 +20,8 @@ global lambda_y
 
 def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     # load data
+    beta = 0.001  # here beta
+
     from utils_spam import data_spam
     X_train, Y_train, X_test, Y_test = data_spam(train_start=0, train_end=295870,
                                                   test_start=0, test_end=126082)
@@ -72,7 +74,7 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     if not os.path.isdir('save/'):
         os.mkdir('save/')
         print('create path save/')
-    path_name = data_name + '_conv_vae_%s/' % (vae_type + '_' + str(dimZ))
+    path_name = data_name + '_conv_vae_%s' % (vae_type + '_' + str(dimZ)) + '_beta_{}/'.format(beta)
     if not os.path.isdir('save/'+path_name):
         os.mkdir('save/'+path_name)
         print('create path save/' + path_name)
@@ -90,14 +92,15 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
 
     # now start fitting 
     n_iter_ = min(n_iter,10)
-    beta = 0.1 # here beta
+
     for i in range(int(n_iter/n_iter_)):
         fit(sess, X_train, Y_train, n_iter_, lr, beta)
         # print training and test accuracy
         eval_acc(sess, X_train, Y_train, 'train', beta)
         eval_acc(sess, X_test, Y_test, 'test', beta)
+        save_params(sess, filename, checkpoint, scope='vae')
 
-    # save param values
+        # save param values
     save_params(sess, filename, checkpoint, scope = 'vae') 
     checkpoint += 1
 

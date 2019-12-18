@@ -22,7 +22,7 @@ def bayes_classifier(x, enc, dec, ll, dimY, lowerbound, K = 1, beta=1.0):
         y = tf.constant(np.asarray(y, dtype='f'))
 
         bound_sum=0
-        mctimes=20
+        mctimes=50
         for jj in range(mctimes):
             bound, debug_list = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=True, beta=beta)
             bound_sum += bound

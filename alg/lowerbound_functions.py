@@ -337,7 +337,7 @@ def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
 
     print('shape ', logpx.shape, log_pyz.shape, (log_prior_z - logq).shape)
     #bound = logp + log_pyzx + beta * (log_prior_z - logq)
-    lambda_y = 5
+    lambda_y = 1
     bound = logpx + lambda_y * log_pyz + beta * (log_prior_z - logq)  #TODO: this is ELBO, need to be maximized
     negKL = log_prior_z - logq
 
