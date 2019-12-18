@@ -6,15 +6,17 @@ import sys, os
 sys.path.extend(['alg/', 'models/', 'utils/'])
 from utils import load_data, save_params, load_params, init_variables
 from visualisation import plot_images
-from vae_new import construct_optimizer
+from alg.vae_new import construct_optimizer
 
-dimZ = 64
-dimH = 500
+dimZ = 256
+dimH = 512
 n_iter = 100
-batch_size = 50
+batch_size = 1000
 lr = 1e-4
 K = 1
 checkpoint = -1
+global lambda_y
+
 
 def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     # load data
@@ -36,11 +38,11 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     # if vae_type == 'E':
     #     from conv_generator_mnist_E import generator
     if vae_type == 'F': 
-        from mlp_generator_spam_F import generator
+        from models.mlp_generator_spam_F import generator
     # if vae_type == 'G':
     #     from models.conv_generator_mnist_G import generator
     # from conv_encoder_mnist import encoder_gaussian as encoder
-    from mlp_encoder_spam import encoder_gaussian as encoder
+    from models.mlp_encoder_spam import encoder_gaussian as encoder
     input_shape = X_train[0].shape
     dimX = input_shape[0]
     print('input_shape:', input_shape)
@@ -88,10 +90,11 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
 
     # now start fitting 
     n_iter_ = min(n_iter,10)
-    beta = 1.0
+    beta = 1.0 # here beta
     for i in range(int(n_iter/n_iter_)):
         fit(sess, X_train, Y_train, n_iter_, lr, beta)
         # print training and test accuracy
+        eval_acc(sess, X_train, Y_train, 'train', beta)
         eval_acc(sess, X_test, Y_test, 'test', beta)
 
     # save param values

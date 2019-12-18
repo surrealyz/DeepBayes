@@ -64,250 +64,258 @@ def encoding(enc_mlp, fea, y, K, use_mean=False, fix_samples=False, seed=0):
 
     return z, logq
 
-def lowerbound_A(x, fea, y, enc_mlp, dec, ll, K=1, IS=False, 
-               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
-    if use_mean:
-        K = 1
-        fix_samples=False
-
-    if z is None:
-        z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
-    else:
-        mu_qz, log_sig_qz = enc_mlp(fea, y)
-        logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
-
-    if len(x.get_shape().as_list()) == 2:
-        x_rep = tf.tile(x, [K, 1])
-    if len(x.get_shape().as_list()) == 4:
-        x_rep = tf.tile(x, [K, 1, 1, 1])
-    y_rep = tf.tile(y, [K, 1])
-
-    # prior
-    pyz, pxzy = dec
-    y_logit = pyz(z)
-    log_pyz = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=y_logit)
-    log_prior_z = log_gaussian_prob(z, 0.0, 0.0)
-
-    # likelihood
-    mu_x = pxzy(z, y_rep)
-    if ll == 'bernoulli':
-        logp = log_bernoulli_prob(x_rep, mu_x)
-    if ll == 'l2':
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum((x_rep - mu_x)**2, ind)
-    if ll == 'l1':
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind)
-    if ll == 'gaussian':
-        mu, log_sig = mu_x
-        logp = log_gaussian_prob(x_rep, mu, log_sig)
-
-    #bound = logp + log_pyz + beta * (log_prior_z - logq)
-    bound = logp * beta + log_pyz + (log_prior_z - logq)
-    if IS and K > 1:	# importance sampling estimate
-        N = x.get_shape().as_list()[0]
-        bound = tf.reshape(bound, [K, N])
-        bound = logsumexp(bound) - tf.log(float(K))
-
-    return bound 
-
-def lowerbound_B(x, fea, y, enc_mlp, dec, ll, K=1, IS=False, 
-               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
-    if use_mean:
-        K = 1
-        fix_samples=False
-
-    if z is None:
-        z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
-    else:
-        mu_qz, log_sig_qz = enc_mlp(fea, y)
-        logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
-
-    if len(x.get_shape().as_list()) == 2:
-        x_rep = tf.tile(x, [K, 1])
-    if len(x.get_shape().as_list()) == 4:
-        x_rep = tf.tile(x, [K, 1, 1, 1])
-    y_rep = tf.tile(y, [K, 1])
-
-    # prior
-    pzy, pxzy = dec
-    mu_pz, log_sig_pz = pzy(y)
-    mu_pz = tf.tile(mu_pz, [K, 1])
-    log_sig_pz = tf.tile(log_sig_pz, [K, 1])
-    log_prior = log_gaussian_prob(z, mu_pz, log_sig_pz)
-    log_py = tf.log(0.1)
-
-    # likelihood
-    mu_x = pxzy(z, y_rep)
-    if ll == 'bernoulli':
-        logp = log_bernoulli_prob(x_rep, mu_x)
-    if ll == 'l2':
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum((x_rep - mu_x)**2, ind)
-    if ll == 'l1':
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind) #/ 0.5
-    if ll == 'gaussian':
-        mu, log_sig = mu_x
-        logp = log_gaussian_prob(x_rep, mu, log_sig)
-    if ll == 'logit_l1':
-        tmp = 0.01 + (1 - 0.01*2) * x_rep
-        x_rep_logit = tf.log(tmp) - tf.log(1 - tmp)
-        logp = -tf.abs(x_rep_logit - mu_x)
-        logp += tmp * (1 - tmp)
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = tf.reduce_sum(logp, ind)
-    if ll == 'logistic_cdf':
-        mu, log_scale = mu_x
-        logp = log_logistic_cdf_prob(x_rep, mu, log_scale)
-
-    #bound = logp + log_py + beta * (log_prior - logq)
-    bound = logp * beta + log_py + (log_prior - logq)
-    if IS and K > 1:	# importance sampling estimate
-        N = x.get_shape().as_list()[0]
-        bound = tf.reshape(bound, [K, N])
-        bound = logsumexp(bound) - tf.log(float(K))
-
-    return bound 
-
-def lowerbound_C(x, fea, y, enc_mlp, dec, ll, K=1, IS=False, 
-               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
-    if use_mean:
-        K = 1
-        fix_samples=False
-
-    if z is None:
-        z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
-    else:
-        mu_qz, log_sig_qz = enc_mlp(fea, y)
-        logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
-
-    if len(x.get_shape().as_list()) == 2:
-        x_rep = tf.tile(x, [K, 1])
-    if len(x.get_shape().as_list()) == 4:
-        x_rep = tf.tile(x, [K, 1, 1, 1])
-    y_rep = tf.tile(y, [K, 1])
-
-    # prior
-    log_prior_z = log_gaussian_prob(z, 0.0, 0.0)
-
-    # decoders
-    pyzx, pxz = dec
-    mu_x = pxz(z)
-    if ll == 'bernoulli':
-        logp = log_bernoulli_prob(x_rep, mu_x)
-    if ll == 'l2':
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum((x_rep - mu_x)**2, ind)
-    if ll == 'l1':
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind)
-
-    logit_y = pyzx(z, x_rep)
-    log_pyzx = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y) 
-
-    #bound = logp + log_pyzx + beta * (log_prior_z - logq)
-    bound = logp * beta + log_pyzx + (log_prior_z - logq)
-    if IS and K > 1:	# importance sampling estimate
-        N = x.get_shape().as_list()[0]
-        bound = tf.reshape(bound, [K, N])
-        bound = logsumexp(bound) - tf.log(float(K))
-
-    return bound 
-
-def lowerbound_D(x, fea, y, enc_mlp, dec, ll, K=1, IS=False, 
-               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
-    # NOTE: this is actually a discriminative model!
-
-    if use_mean:
-        K = 1
-        fix_samples=False
-
-    if z is None:
-        z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
-    else:
-        mu_qz, log_sig_qz = enc_mlp(fea, y)
-        logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
-
-    if len(x.get_shape().as_list()) == 2:
-        x_rep = tf.tile(x, [K, 1])
-    if len(x.get_shape().as_list()) == 4:
-        x_rep = tf.tile(x, [K, 1, 1, 1])
-    y_rep = tf.tile(y, [K, 1])
-
-    # decoders
-    pyzx, pzx = dec
-    mu_pz, log_sig_pz = pzx(x)
-    mu_pz = tf.tile(mu_pz, [K, 1])
-    log_sig_pz = tf.tile(log_sig_pz, [K, 1])
-    log_pzx = log_gaussian_prob(z, mu_pz, log_sig_pz)
-
-    logit_y = pyzx(z, x_rep)
-    log_pyzx = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y) 
-
-    bound = log_pyzx + beta * (log_pzx - logq)
-    if IS and K > 1:	# importance sampling estimate
-        N = x.get_shape().as_list()[0]
-        bound = tf.reshape(bound, [K, N])
-        bound = logsumexp(bound) - tf.log(float(K))
-
-    return bound
- 
-def lowerbound_E(x, fea, y, enc_mlp, dec, ll, K=1, IS=False, 
-               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
-    # NOTE: this is actually a discriminative model!
-
-    if use_mean:
-        K = 1
-        fix_samples=False
-
-    if z is None:
-        z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
-    else:
-        mu_qz, log_sig_qz = enc_mlp(fea, y)
-        logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
-
-    if len(x.get_shape().as_list()) == 2:
-        x_rep = tf.tile(x, [K, 1])
-    if len(x.get_shape().as_list()) == 4:
-        x_rep = tf.tile(x, [K, 1, 1, 1])
-    y_rep = tf.tile(y, [K, 1])
-
-    # decoders
-    pyz, pzx = dec
-    mu_pz, log_sig_pz = pzx(x)
-    mu_pz = tf.tile(mu_pz, [K, 1])
-    log_sig_pz = tf.tile(log_sig_pz, [K, 1])
-    log_pzx = log_gaussian_prob(z, mu_pz, log_sig_pz)
-
-    logit_y = pyz(z)
-    log_pyz = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y) 
-
-    bound = log_pzx + log_pyz - beta * logq
-    if IS and K > 1:	# importance sampling estimate
-        N = x.get_shape().as_list()[0]
-        bound = tf.reshape(bound, [K, N])
-        bound = logsumexp(bound) - tf.log(float(K))
-
-    return bound
+# def lowerbound_A(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
+#                use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
+#     if use_mean:
+#         K = 1
+#         fix_samples=False
+#
+#     if z is None:
+#         z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
+#     else:
+#         mu_qz, log_sig_qz = enc_mlp(fea, y)
+#         logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
+#
+#     if len(x.get_shape().as_list()) == 2:
+#         x_rep = tf.tile(x, [K, 1])
+#     if len(x.get_shape().as_list()) == 4:
+#         x_rep = tf.tile(x, [K, 1, 1, 1])
+#     y_rep = tf.tile(y, [K, 1])
+#
+#     # prior
+#     pyz, pxzy = dec
+#     y_logit = pyz(z)
+#     log_pyz = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=y_logit)
+#     log_prior_z = log_gaussian_prob(z, 0.0, 0.0)
+#
+#     # likelihood
+#     mu_x = pxzy(z, y_rep)
+#     if ll == 'bernoulli':
+#         logp = log_bernoulli_prob(x_rep, mu_x)
+#     if ll == 'l2':
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = -tf.reduce_sum((x_rep - mu_x)**2, ind)
+#     if ll == 'l1':
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind)
+#     if ll == 'gaussian':
+#         mu, log_sig = mu_x
+#         logp = log_gaussian_prob(x_rep, mu, log_sig)
+#
+#     #bound = logp + log_pyz + beta * (log_prior_z - logq)
+#     bound = logp * beta + log_pyz + (log_prior_z - logq)
+#     if IS and K > 1:	# importance sampling estimate
+#         N = x.get_shape().as_list()[0]
+#         bound = tf.reshape(bound, [K, N])
+#         bound = logsumexp(bound) - tf.log(float(K))
+#
+#     return bound
+#
+# def lowerbound_B(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
+#                use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
+#     if use_mean:
+#         K = 1
+#         fix_samples=False
+#
+#     if z is None:
+#         z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
+#     else:
+#         mu_qz, log_sig_qz = enc_mlp(fea, y)
+#         logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
+#
+#     if len(x.get_shape().as_list()) == 2:
+#         x_rep = tf.tile(x, [K, 1])
+#     if len(x.get_shape().as_list()) == 4:
+#         x_rep = tf.tile(x, [K, 1, 1, 1])
+#     y_rep = tf.tile(y, [K, 1])
+#
+#     # prior
+#     pzy, pxzy = dec
+#     mu_pz, log_sig_pz = pzy(y)
+#     mu_pz = tf.tile(mu_pz, [K, 1])
+#     log_sig_pz = tf.tile(log_sig_pz, [K, 1])
+#     log_prior = log_gaussian_prob(z, mu_pz, log_sig_pz)
+#     log_py = tf.log(0.1)
+#
+#     # likelihood
+#     mu_x = pxzy(z, y_rep)
+#     if ll == 'bernoulli':
+#         logp = log_bernoulli_prob(x_rep, mu_x)
+#     if ll == 'l2':
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = -tf.reduce_sum((x_rep - mu_x)**2, ind)
+#     if ll == 'l1':
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind) #/ 0.5
+#     if ll == 'gaussian':
+#         mu, log_sig = mu_x
+#         logp = log_gaussian_prob(x_rep, mu, log_sig)
+#     if ll == 'logit_l1':
+#         tmp = 0.01 + (1 - 0.01*2) * x_rep
+#         x_rep_logit = tf.log(tmp) - tf.log(1 - tmp)
+#         logp = -tf.abs(x_rep_logit - mu_x)
+#         logp += tmp * (1 - tmp)
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = tf.reduce_sum(logp, ind)
+#     if ll == 'logistic_cdf':
+#         mu, log_scale = mu_x
+#         logp = log_logistic_cdf_prob(x_rep, mu, log_scale)
+#
+#     #bound = logp + log_py + beta * (log_prior - logq)
+#     bound = logp * beta + log_py + (log_prior - logq)
+#     if IS and K > 1:	# importance sampling estimate
+#         N = x.get_shape().as_list()[0]
+#         bound = tf.reshape(bound, [K, N])
+#         bound = logsumexp(bound) - tf.log(float(K))
+#
+#     return bound
+#
+# def lowerbound_C(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
+#                use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
+#     if use_mean:
+#         K = 1
+#         fix_samples=False
+#
+#     if z is None:
+#         z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
+#     else:
+#         mu_qz, log_sig_qz = enc_mlp(fea, y)
+#         logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
+#
+#     if len(x.get_shape().as_list()) == 2:
+#         x_rep = tf.tile(x, [K, 1])
+#     if len(x.get_shape().as_list()) == 4:
+#         x_rep = tf.tile(x, [K, 1, 1, 1])
+#     y_rep = tf.tile(y, [K, 1])
+#
+#     # prior
+#     log_prior_z = log_gaussian_prob(z, 0.0, 0.0)
+#
+#     # decoders
+#     pyzx, pxz = dec
+#     mu_x = pxz(z)
+#     if ll == 'bernoulli':
+#         logp = log_bernoulli_prob(x_rep, mu_x)
+#     if ll == 'l2':
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = -tf.reduce_sum((x_rep - mu_x)**2, ind)
+#     if ll == 'l1':
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind)
+#
+#     logit_y = pyzx(z, x_rep)
+#     log_pyzx = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y)
+#
+#     #bound = logp + log_pyzx + beta * (log_prior_z - logq)
+#     bound = logp * beta + log_pyzx + (log_prior_z - logq)
+#     if IS and K > 1:	# importance sampling estimate
+#         N = x.get_shape().as_list()[0]
+#         bound = tf.reshape(bound, [K, N])
+#         bound = logsumexp(bound) - tf.log(float(K))
+#
+#     return bound
+#
+# def lowerbound_D(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
+#                use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
+#     # NOTE: this is actually a discriminative model!
+#
+#     if use_mean:
+#         K = 1
+#         fix_samples=False
+#
+#     if z is None:
+#         z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
+#     else:
+#         mu_qz, log_sig_qz = enc_mlp(fea, y)
+#         logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
+#
+#     if len(x.get_shape().as_list()) == 2:
+#         x_rep = tf.tile(x, [K, 1])
+#     if len(x.get_shape().as_list()) == 4:
+#         x_rep = tf.tile(x, [K, 1, 1, 1])
+#     y_rep = tf.tile(y, [K, 1])
+#
+#     # decoders
+#     pyzx, pzx = dec
+#     mu_pz, log_sig_pz = pzx(x)
+#     mu_pz = tf.tile(mu_pz, [K, 1])
+#     log_sig_pz = tf.tile(log_sig_pz, [K, 1])
+#     log_pzx = log_gaussian_prob(z, mu_pz, log_sig_pz)
+#
+#     logit_y = pyzx(z, x_rep)
+#     log_pyzx = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y)
+#
+#     bound = log_pyzx + beta * (log_pzx - logq)
+#     if IS and K > 1:	# importance sampling estimate
+#         N = x.get_shape().as_list()[0]
+#         bound = tf.reshape(bound, [K, N])
+#         bound = logsumexp(bound) - tf.log(float(K))
+#
+#     return bound
+#
+# def lowerbound_E(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
+#                use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
+#     # NOTE: this is actually a discriminative model!
+#
+#     if use_mean:
+#         K = 1
+#         fix_samples=False
+#
+#     if z is None:
+#         z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
+#     else:
+#         mu_qz, log_sig_qz = enc_mlp(fea, y)
+#         logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
+#
+#     if len(x.get_shape().as_list()) == 2:
+#         x_rep = tf.tile(x, [K, 1])
+#     if len(x.get_shape().as_list()) == 4:
+#         x_rep = tf.tile(x, [K, 1, 1, 1])
+#     y_rep = tf.tile(y, [K, 1])
+#
+#     # decoders
+#     pyz, pzx = dec
+#     mu_pz, log_sig_pz = pzx(x)
+#     mu_pz = tf.tile(mu_pz, [K, 1])
+#     log_sig_pz = tf.tile(log_sig_pz, [K, 1])
+#     log_pzx = log_gaussian_prob(z, mu_pz, log_sig_pz)
+#
+#     logit_y = pyz(z)
+#     log_pyz = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y)
+#
+#     bound = log_pzx + log_pyz - beta * logq
+#     if IS and K > 1:	# importance sampling estimate
+#         N = x.get_shape().as_list()[0]
+#         bound = tf.reshape(bound, [K, N])
+#         bound = logsumexp(bound) - tf.log(float(K))
+#
+#     return bound
 
 def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False, 
                use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
     if use_mean:
         K = 1
         fix_samples=False
-
+    K=1
     if z is None:
+        # print("z is None\n#")
+        # print()
         z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
+        # print('z shape', z.shape)
     else:
         mu_qz, log_sig_qz = enc_mlp(fea, y)
         logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
+        # print('z shape', z.shape)
 
-    if len(x.get_shape().as_list()) == 2:
-        x_rep = tf.tile(x, [K, 1])
-    if len(x.get_shape().as_list()) == 4:
-        x_rep = tf.tile(x, [K, 1, 1, 1])
-    y_rep = tf.tile(y, [K, 1])
+    # if len(x.get_shape().as_list()) == 2:
+    #     x_rep = tf.tile(x, [K, 1])  #TODO: why replicate?
+
+    # if len(x.get_shape().as_list()) == 4:
+    #     x_rep = tf.tile(x, [K, 1, 1, 1])
+    # y_rep = tf.tile(y, [K, 1])
+
+    x_rep = x
+    y_rep = y
 
     # prior
     log_prior_z = log_gaussian_prob(z, 0.0, 0.0)
@@ -316,82 +324,86 @@ def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
     pyz, pxz = dec
     mu_x = pxz(z)
     if ll == 'bernoulli':
-        logp = log_bernoulli_prob(x_rep, mu_x)
+        logpx = log_bernoulli_prob(x_rep, mu_x)
     if ll == 'l2':
         ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum((x_rep - mu_x)**2, ind)
+        logpx = -tf.reduce_sum((x_rep - mu_x)**2, ind)
     if ll == 'l1':
         ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind)
+        logpx = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind)
 
     logit_y = pyz(z)
     log_pyz = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y) 
 
+    print('shape ', logpx.shape, log_pyz.shape, (log_prior_z - logq).shape)
     #bound = logp + log_pyzx + beta * (log_prior_z - logq)
-    bound = logp * beta + log_pyz + (log_prior_z - logq)
-    if IS and K > 1:	# importance sampling estimate
-        N = x.get_shape().as_list()[0]
-        bound = tf.reshape(bound, [K, N])
-        bound = logsumexp(bound) - tf.log(float(K))
+    lambda_y = 5
+    bound = logpx + lambda_y * log_pyz + beta * (log_prior_z - logq)  #TODO: this is ELBO, need to be maximized
+    negKL = log_prior_z - logq
 
-    return bound
+    # if IS and K > 1:	# importance sampling estimate
+    #     N = x.get_shape().as_list()[0]
+    #     bound = tf.reshape(bound, [K, N])
+    #     bound = logsumexp(bound) - tf.log(float(K))
+
+    return bound, [tf.reduce_mean(logpx), tf.reduce_mean(log_pyz), tf.reduce_mean(negKL)]
  
-def lowerbound_G(x, fea, y, enc_mlp, dec, ll, K=1, IS=False, 
-               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
-    if use_mean:
-        K = 1
-        fix_samples=False
-
-    if z is None:
-        z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
-    else:
-        mu_qz, log_sig_qz = enc_mlp(fea, y)
-        logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
-
-    if len(x.get_shape().as_list()) == 2:
-        x_rep = tf.tile(x, [K, 1])
-    if len(x.get_shape().as_list()) == 4:
-        x_rep = tf.tile(x, [K, 1, 1, 1])
-    y_rep = tf.tile(y, [K, 1])
-
-    # prior
-    pzy, pxz = dec
-    mu_pz, log_sig_pz = pzy(y)
-    mu_pz = tf.tile(mu_pz, [K, 1])
-    log_sig_pz = tf.tile(log_sig_pz, [K, 1])
-    log_prior = log_gaussian_prob(z, mu_pz, log_sig_pz)
-    log_py = tf.log(0.1)
-
-    # likelihood
-    mu_x = pxz(z)
-    if ll == 'bernoulli':
-        logp = log_bernoulli_prob(x_rep, mu_x)
-    if ll == 'l2':
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum((x_rep - mu_x)**2, ind)
-    if ll == 'l1':
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind) #/ 0.5
-    if ll == 'gaussian':
-        mu, log_sig = mu_x
-        logp = log_gaussian_prob(x_rep, mu, log_sig)
-    if ll == 'logit_l1':
-        tmp = 0.01 + (1 - 0.01*2) * x_rep
-        x_rep_logit = tf.log(tmp) - tf.log(1 - tmp)
-        logp = -tf.abs(x_rep_logit - mu_x)
-        logp += tmp * (1 - tmp)
-        ind = list(range(1, len(x_rep.get_shape().as_list())))
-        logp = tf.reduce_sum(logp, ind)
-    if ll == 'logistic_cdf':
-        mu, log_scale = mu_x
-        logp = log_logistic_cdf_prob(x_rep, mu, log_scale)
-
-    #bound = logp + log_py + beta * (log_prior - logq)
-    bound = logp * beta + log_py + (log_prior - logq)
-    if IS and K > 1:	# importance sampling estimate
-        N = x.get_shape().as_list()[0]
-        bound = tf.reshape(bound, [K, N])
-        bound = logsumexp(bound) - tf.log(float(K))
-
-    return bound 
-
+# def lowerbound_G(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
+#                use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
+#     if use_mean:
+#         K = 1
+#         fix_samples=False
+#
+#     if z is None:
+#         z, logq = encoding(enc_mlp, fea, y, K, use_mean, fix_samples, seed)
+#     else:
+#         mu_qz, log_sig_qz = enc_mlp(fea, y)
+#         logq = log_gaussian_prob(z, mu_qz, log_sig_qz)
+#
+#     if len(x.get_shape().as_list()) == 2:
+#         x_rep = tf.tile(x, [K, 1])
+#     if len(x.get_shape().as_list()) == 4:
+#         x_rep = tf.tile(x, [K, 1, 1, 1])
+#     y_rep = tf.tile(y, [K, 1])
+#
+#     # prior
+#     pzy, pxz = dec
+#     mu_pz, log_sig_pz = pzy(y)
+#     mu_pz = tf.tile(mu_pz, [K, 1])
+#     log_sig_pz = tf.tile(log_sig_pz, [K, 1])
+#     log_prior = log_gaussian_prob(z, mu_pz, log_sig_pz)
+#     log_py = tf.log(0.1)
+#
+#     # likelihood
+#     mu_x = pxz(z)
+#     if ll == 'bernoulli':
+#         logp = log_bernoulli_prob(x_rep, mu_x)
+#     if ll == 'l2':
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = -tf.reduce_sum((x_rep - mu_x)**2, ind)
+#     if ll == 'l1':
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind) #/ 0.5
+#     if ll == 'gaussian':
+#         mu, log_sig = mu_x
+#         logp = log_gaussian_prob(x_rep, mu, log_sig)
+#     if ll == 'logit_l1':
+#         tmp = 0.01 + (1 - 0.01*2) * x_rep
+#         x_rep_logit = tf.log(tmp) - tf.log(1 - tmp)
+#         logp = -tf.abs(x_rep_logit - mu_x)
+#         logp += tmp * (1 - tmp)
+#         ind = list(range(1, len(x_rep.get_shape().as_list())))
+#         logp = tf.reduce_sum(logp, ind)
+#     if ll == 'logistic_cdf':
+#         mu, log_scale = mu_x
+#         logp = log_logistic_cdf_prob(x_rep, mu, log_scale)
+#
+#     #bound = logp + log_py + beta * (log_prior - logq)
+#     bound = logp * beta + log_py + (log_prior - logq)
+#     if IS and K > 1:	# importance sampling estimate
+#         N = x.get_shape().as_list()[0]
+#         bound = tf.reshape(bound, [K, N])
+#         bound = logsumexp(bound) - tf.log(float(K))
+#
+#     return bound
+#

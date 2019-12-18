@@ -16,12 +16,20 @@ def bayes_classifier(x, enc, dec, ll, dimY, lowerbound, K = 1, beta=1.0):
     N = x.get_shape().as_list()[0]
     logpxy = []
     for i in range(dimY):
-        y = np.zeros([N, dimY]); y[:, i] = 1; y = tf.constant(np.asarray(y, dtype='f'))
-        bound = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=True, beta=beta)
+        y = np.zeros([N, dimY])
+        y[:, i] = 1
+        y = tf.constant(np.asarray(y, dtype='f'))
+        bound, debug_list = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=True, beta=beta)
         logpxy.append(tf.expand_dims(bound, 1))
     logpxy = tf.concat(logpxy, 1)
     pyx = tf.nn.softmax(logpxy)
-    return pyx 
+    return pyx
+
+
+# def y_classifier_using_z_x(x, enc, dec, l1, dimY):
+#     enc_conv, enc_mlp = enc
+#     fea = enc_conv(x)
+#     mu_qz, log_sig_qz = enc_mlp(fea, y)
 
 def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A'):
 
@@ -38,39 +46,39 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A'):
         ll_ = ll
     fea = enc_conv(X_)
 
-    if vae_type == 'A':
-        from lowerbound_functions import lowerbound_A as lowerbound_func
-    if vae_type == 'B':
-        from lowerbound_functions import lowerbound_B as lowerbound_func
-    if vae_type == 'C':
-        from lowerbound_functions import lowerbound_C as lowerbound_func
-    if vae_type == 'D':
-        from lowerbound_functions import lowerbound_D as lowerbound_func
-    if vae_type == 'E':
-        from lowerbound_functions import lowerbound_E as lowerbound_func
+    # if vae_type == 'A':
+    #     from lowerbound_functions import lowerbound_A as lowerbound_func
+    # if vae_type == 'B':
+    #     from lowerbound_functions import lowerbound_B as lowerbound_func
+    # if vae_type == 'C':
+    #     from lowerbound_functions import lowerbound_C as lowerbound_func
+    # if vae_type == 'D':
+    #     from lowerbound_functions import lowerbound_D as lowerbound_func
+    # if vae_type == 'E':
+    #     from lowerbound_functions import lowerbound_E as lowerbound_func
     if vae_type == 'F':
-        from lowerbound_functions import lowerbound_F as lowerbound_func
-    if vae_type == 'G':
-        from lowerbound_functions import lowerbound_G as lowerbound_func
+        from alg.lowerbound_functions import lowerbound_F as lowerbound_func
+    # if vae_type == 'G':
+    #     from lowerbound_functions import lowerbound_G as lowerbound_func
 
     beta_ph = tf.placeholder(tf.float32, shape=(), name='beta')
-    bound = lowerbound_func(X_, fea, Y_ph, enc_mlp, dec, ll_, K, IS=True, beta=beta_ph)
+    bound, debug_list = lowerbound_func(X_, fea, Y_ph, enc_mlp, dec, ll_, K, IS=True, beta=beta_ph)
     bound = tf.reduce_mean(bound)
     batch_size = X_ph.get_shape().as_list()[0]
 
     # also evaluate approx Bayes classifier's accuracy
     dimY = Y_ph.get_shape().as_list()[-1]
-    y_pred = bayes_classifier(X_, enc, dec, ll_, dimY, lowerbound_func, K=10, beta=beta_ph)
+    y_pred = bayes_classifier(X_, enc, dec, ll_, dimY, lowerbound_func, K=10, beta=beta_ph) # TODO: weired
     correct_prediction = tf.equal(tf.argmax(Y_ph,1), tf.argmax(y_pred,1))
     acc_train = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     # now construct optimizers
     lr_ph = tf.placeholder(tf.float32, shape=())
-    opt = tf.train.AdamOptimizer(learning_rate=lr_ph).minimize(-bound)
-    ops = [opt, bound]
+    opt = tf.train.AdamOptimizer(learning_rate=lr_ph).minimize(-bound) #Maximizing ELBO, bound is ELBO
+    ops = [opt, bound] + debug_list
     def train(sess, X, Y, lr, beta):
-        _, cost = sess.run(ops, feed_dict={X_ph: X, Y_ph: Y, lr_ph: lr, beta_ph: beta})
-        return cost
+        _, cost, logpx_z, logpy_z, negKL_value = sess.run(ops, feed_dict={X_ph: X, Y_ph: Y, lr_ph: lr, beta_ph: beta})
+        return cost, logpx_z, logpy_z, negKL_value
 
     def fit(sess, X, Y, n_iter, lr, beta):
         N = X.shape[0]        
@@ -80,6 +88,9 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A'):
         for iteration in range(1, n_iter + 1):
             ind_s = np.random.permutation(range(N))
             bound_total = 0.0
+            logpx_z_total = 0.0
+            logpy_z_total = 0.0
+            negKL_value_total = 0.0
             for j in range(0, n_iter_vae):
                 indl = j * batch_size
                 indr = (j+1) * batch_size
@@ -88,11 +99,15 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A'):
                     ind = np.concatenate((ind, ind_s[:(indr-N)]))
                 batch = X[ind]
                 #batch = np.clip(batch + np.random.uniform(size=batch.shape) * 1./255., 0.0, 1.0)
-                cost = train(sess, batch, Y[ind], lr, beta) 
+                cost, logpx_z, logpy_z, negKL_value = train(sess, batch, Y[ind], lr, beta)
                 bound_total += cost / n_iter_vae
+                logpx_z_total += logpx_z / n_iter_vae
+                logpy_z_total += logpy_z / n_iter_vae
+                negKL_value_total += negKL_value / n_iter_vae
+
             end = time.time()
-            print("Iter %d, logp(x|y)=%.2f, time=%.2f" \
-                  % (iteration, bound_total, end - begin))
+            print("Iter %d, ELBO=%.5f, p(x|z)=%.5f, p(y|z)=%.5f, KL=%.5f, time=%.2f" \
+                  % (iteration, bound_total, logpx_z_total, logpy_z_total, -negKL_value_total, end - begin))
             begin = end
 
     def eval(sess, X, Y, data_name = 'train', beta=1.0):
