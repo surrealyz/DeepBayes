@@ -16,11 +16,18 @@ def bayes_classifier(x, enc, dec, ll, dimY, lowerbound, K = 1, beta=1.0):
     N = x.get_shape().as_list()[0]
     logpxy = []
     for i in range(dimY):
+
         y = np.zeros([N, dimY])
         y[:, i] = 1
         y = tf.constant(np.asarray(y, dtype='f'))
-        bound, debug_list = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=True, beta=beta)
-        logpxy.append(tf.expand_dims(bound, 1))
+
+        bound_sum=0
+        mctimes=20
+        for jj in range(mctimes):
+            bound, debug_list = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=True, beta=beta)
+            bound_sum += bound
+
+        logpxy.append(tf.expand_dims(bound_sum/mctimes, 1))
     logpxy = tf.concat(logpxy, 1)
     pyx = tf.nn.softmax(logpxy)
     return pyx

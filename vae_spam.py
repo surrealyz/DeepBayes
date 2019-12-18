@@ -90,7 +90,7 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
 
     # now start fitting 
     n_iter_ = min(n_iter,10)
-    beta = 1.0 # here beta
+    beta = 0.1 # here beta
     for i in range(int(n_iter/n_iter_)):
         fit(sess, X_train, Y_train, n_iter_, lr, beta)
         # print training and test accuracy
