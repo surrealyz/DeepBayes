@@ -56,7 +56,7 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     enc = encoder(dimX, dimH, dimZ, dimY, n_layers_enc, 'enc')
 
     # define optimisers
-    X_ph = tf.placeholder(tf.float32, shape=(batch_size,)+input_shape)
+    X_ph = tf.placeholder(tf.float32, shape=(batch_size,)+input_shape)  #TODO: ??
     Y_ph = tf.placeholder(tf.float32, shape=(batch_size, dimY))
     print('X_ph.shape:', X_ph.shape)
     print('Y_ph.shape:', Y_ph.shape)

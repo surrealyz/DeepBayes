@@ -103,8 +103,9 @@ def bayes_classifier(x, enc, dec, ll, dimY, dimZ, lowerbound, K = 1, beta=1.0, u
         z_holder = None
     for i in range(dimY):
         y = np.zeros([N, dimY]); y[:, i] = 1; y = tf.constant(np.asarray(y, dtype='f'))
-        bound = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=False, beta=beta, 
+        bound, debug_list = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=False, beta=beta,
                            use_mean=use_mean, fix_samples=fix_samples, seed=seed, z=z_holder)
+        print('bound shape', bound.shape)
         logpxy.append(tf.expand_dims(bound, 1))
     logpxy = tf.concat(logpxy, 1)
     if snapshot:
