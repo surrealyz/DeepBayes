@@ -133,76 +133,65 @@ def load_bayes_classifier(sess, data_name, vae_type, K, checkpoint=0, conv=True,
         dimY = 2
 
     # then define model
-    if data_name == 'mnist':
-        if vae_type == 'A':
-            from conv_generator_mnist_A import generator
-        if vae_type == 'B':
-            from conv_generator_mnist_B import generator
-        if vae_type == 'C':
-            from conv_generator_mnist_C import generator
-        if vae_type == 'D':
-            from conv_generator_mnist_D import generator
-        if vae_type == 'E':
-            from conv_generator_mnist_E import generator
-        if vae_type == 'F':
-            from conv_generator_mnist_F import generator
-        if vae_type == 'G':
-            from conv_generator_mnist_G import generator
-        from conv_encoder_mnist import encoder_gaussian as encoder
-        n_channel = 64
-        dimH = 500
-        if dimZ is None:
-            dimZ = 64
-        ll = 'l2'
-        beta = 1.0
-    if data_name in ['cifar10', 'svhn', 'plane_frog']:
-        if vae_type == 'A':
-            from conv_generator_cifar10_A import generator
-        if vae_type == 'B':
-            from conv_generator_cifar10_B import generator
-        if vae_type == 'C':
-            from conv_generator_cifar10_C import generator
-        if vae_type == 'D':
-            from conv_generator_cifar10_D import generator
-        if vae_type == 'E':
-            from conv_generator_cifar10_E import generator
-        if vae_type == 'F':
-            from conv_generator_cifar10_F import generator
-        if vae_type == 'G':
-            from conv_generator_cifar10_G import generator
-        from conv_encoder_cifar10 import encoder_gaussian as encoder
-        n_channel = 64
-        dimH = 1000
-        if dimZ is None:
-            dimZ = 128
-        if data_name == 'plane_frog':
-            ll = 'l2'
-            beta = 1.0
-        else:
-            ll = 'l1'
-            beta = 1.0
+    if data_name == 'spam':
 
-    dec = generator(input_shape, dimH, dimZ, dimY, n_channel, 'sigmoid', 'gen')
-    enc, enc_conv, enc_mlp = encoder(input_shape, dimH, dimZ, dimY, n_channel, 'enc')
+        if vae_type == 'F':
+            from mlp_generator_spam_F import generator
+
+        from mlp_encoder_spam import encoder_gaussian as encoder
+        # n_channel = 64
+        dimH = 1024
+        # if dimZ is None:
+        dimZ = 512
+        ll = 'l2'
+        beta = 0.001
+        dimX = 25
+        dimY = 2
+    # if data_name in ['cifar10', 'svhn', 'plane_frog']:
+    #     if vae_type == 'A':
+    #         from conv_generator_cifar10_A import generator
+    #     if vae_type == 'B':
+    #         from conv_generator_cifar10_B import generator
+    #     if vae_type == 'C':
+    #         from conv_generator_cifar10_C import generator
+    #     if vae_type == 'D':
+    #         from conv_generator_cifar10_D import generator
+    #     if vae_type == 'E':
+    #         from conv_generator_cifar10_E import generator
+    #     if vae_type == 'F':
+    #         from conv_generator_cifar10_F import generator
+    #     if vae_type == 'G':
+    #         from conv_generator_cifar10_G import generator
+    #     from conv_encoder_cifar10 import encoder_gaussian as encoder
+    #     n_channel = 64
+    #     dimH = 1000
+    #     if dimZ is None:
+    #         dimZ = 128
+    #     if data_name == 'plane_frog':
+    #         ll = 'l2'
+    #         beta = 1.0
+    #     else:
+    #         ll = 'l1'
+    #         beta = 1.0
+
+    # dec = generator(input_shape, dimH, dimZ, dimY, n_channel, 'sigmoid', 'gen')
+    dec = generator(dimX, dimH, dimZ, dimY, 'linear', 'gen')
+    # enc, enc_conv, enc_mlp = encoder(input_shape, dimH, dimZ, dimY, n_channel, 'enc')
+    n_layers_enc = 2
+    enc = encoder(dimX, dimH, dimZ, dimY, n_layers_enc, 'enc')
+    identity = lambda x: x
+
+    enc_conv = identity
+    enc_mlp = enc
     
-    if vae_type == 'A':
-        from lowerbound_functions import lowerbound_A as bound_func
-    if vae_type == 'B':
-        from lowerbound_functions import lowerbound_B as bound_func
-    if vae_type == 'C':
-        from lowerbound_functions import lowerbound_C as bound_func
-    if vae_type == 'D':
-        from lowerbound_functions import lowerbound_D as bound_func
-    if vae_type == 'E':
-        from lowerbound_functions import lowerbound_E as bound_func
+
     if vae_type == 'F':
+        from lowerbound_functions import lowerbound_F as lowerbound
         from lowerbound_functions import lowerbound_F as bound_func
-    if vae_type == 'G':
-        from lowerbound_functions import lowerbound_G as bound_func
 
     # load params   
     path_name = data_name + '_conv_vae_%s' % vae_type
-    path_name = path_name + '_%d' % dimZ
+    path_name = path_name + '_%d' % dimZ + '_beta_{}'.format(beta)
     path_name += '/'
     print(PATH+'save/'+path_name)
     assert os.path.isdir(PATH+'save/'+path_name)
@@ -211,8 +200,8 @@ def load_bayes_classifier(sess, data_name, vae_type, K, checkpoint=0, conv=True,
     load_params(sess, filename, checkpoint)
 
     def comp_test_ll(x, y, K):
-        fea = enc_conv(x)
-        bound = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=True, beta=beta, use_mean=use_mean)
+        fea = identity(x)
+        bound = lowerbound(x, fea, y, enc, dec, ll, K, IS=True, beta=beta, use_mean=use_mean)
         return tf.reduce_mean(bound)
     
     def classifier(x):

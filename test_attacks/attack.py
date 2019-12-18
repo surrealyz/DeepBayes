@@ -34,20 +34,27 @@ def test_attacks(data_name, model_name, attack_method, eps, batch_size=100,
     print("Created TensorFlow session.")
     set_log_level(logging.DEBUG)
 
-    if data_name == 'mnist':
-        from cleverhans.utils_mnist import data_mnist
-        X_train, Y_train, X_test, Y_test = data_mnist(train_start=0, train_end=60000,
-                                                      test_start=0, test_end=10000)
-    if data_name in ['cifar10', 'plane_frog']:
-        from import_data_cifar10 import load_data_cifar10
-        if data_name == 'plane_frog':
-            labels = [0, 6]
-        else:
-            labels = None
-        data_path = '../cifar_data/'
-        X_train, X_test, Y_train, Y_test = load_data_cifar10(data_path, labels=labels, conv=True)
+    # if data_name == 'mnist':
+    #     from cleverhans.utils_mnist import data_mnist
+    #     X_train, Y_train, X_test, Y_test = data_mnist(train_start=0, train_end=60000,
+    #                                                   test_start=0, test_end=10000)
+    if data_name == 'spam':
+        from utils_spam import data_spam
+        X_train, Y_train, X_test, Y_test = data_spam(train_start=0, train_end=295870,
+                                                     test_start=0, test_end=126082)
+        print(X_train[0])
+        print(Y_train[0])
+
+    # if data_name in ['cifar10', 'plane_frog']:
+    #     from import_data_cifar10 import load_data_cifar10
+    #     if data_name == 'plane_frog':
+    #         labels = [0, 6]
+    #     else:
+    #         labels = None
+    #     data_path = '../cifar_data/'
+    #     X_train, X_test, Y_train, Y_test = load_data_cifar10(data_path, labels=labels, conv=True)
     
-    source_samples, img_rows, img_cols, channels = X_test.shape
+    source_samples, img_rows = X_test.shape
     nb_classes = Y_test.shape[1]
     # test cw
     #source_samples = 100
@@ -55,8 +62,8 @@ def test_attacks(data_name, model_name, attack_method, eps, batch_size=100,
     # Define input TF placeholder
     batch_size = min(batch_size, X_test.shape[0])
     print('use batch_size = %d' % batch_size)
-    x = tf.placeholder(tf.float32, shape=(batch_size, img_rows, img_cols, channels))
-    y = tf.placeholder(tf.float32, shape=(batch_size, nb_classes))
+    x = tf.placeholder(tf.float32, shape=(batch_size, 25))
+    y = tf.placeholder(tf.float32, shape=(batch_size, 2))
 
     # Define TF model graph  
     model = load_classifier(sess, model_name, data_name)
@@ -84,7 +91,7 @@ def test_attacks(data_name, model_name, attack_method, eps, batch_size=100,
         one_hot = np.zeros((nb_classes, nb_classes))
         one_hot[np.arange(nb_classes), np.arange(nb_classes)] = 1
         adv_inputs = adv_inputs.reshape(
-            (source_samples * nb_classes, img_rows, img_cols, 1))
+            (source_samples * nb_classes, 25))
         adv_ys = np.array([one_hot] * source_samples,
                           dtype=np.float32).reshape((source_samples *
                                                      nb_classes, nb_classes))
