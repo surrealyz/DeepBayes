@@ -22,7 +22,7 @@ import pickle
 FLAGS = flags.FLAGS
 
 def test_attacks(data_name, model_name, attack_method, eps, batch_size=100, 
-                 targeted=False, save=False):
+                 targeted=False, save=False, categorical=False, args=None):
 
     # Set TF random seed to improve reproducibility
     tf.set_random_seed(1234)
@@ -64,9 +64,13 @@ def test_attacks(data_name, model_name, attack_method, eps, batch_size=100,
     print('use batch_size = %d' % batch_size)
     x = tf.placeholder(tf.float32, shape=(batch_size, 25))
     y = tf.placeholder(tf.float32, shape=(batch_size, 2))
+    if categorical:
+        X_cat = tf.placeholder(tf.int32, shape=(batch_size, 25))
+    else:
+        X_cat = None
 
     # Define TF model graph  
-    model = load_classifier(sess, model_name, data_name)
+    model = load_classifier(sess, model_name, data_name, categorical=categorical, x_cat=X_cat, dimZ=args.dimZ)
     if 'bayes' in model_name and 'distill' not in model_name and 'query' not in model_name:
         model_name = model_name + '_cnn'
 
@@ -164,13 +168,15 @@ def test_attacks(data_name, model_name, attack_method, eps, batch_size=100,
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run RVAE experiments.')
     parser.add_argument('--batch_size', '-B', type=int, default=100)
+    parser.add_argument('--dimZ', '-Z', type=int, default=512)
     parser.add_argument('--data', '-D', type=str, default='plane_frog')
     parser.add_argument('--targeted', '-T', action='store_true', default=False)
     parser.add_argument('--attack', '-A', type=str, default='pgd')
     parser.add_argument('--eps', '-e', type=float, default=0.1)
     parser.add_argument('--victim', '-V', type=str, default='bnn_K10')
     parser.add_argument('--save', '-S', action='store_true', default=False)
-    
+    parser.add_argument('--cat', '-C', action='store_true', default=False)
+
     args = parser.parse_args()
     test_attacks(data_name=args.data,
                  model_name=args.victim,
@@ -178,5 +184,7 @@ if __name__ == '__main__':
                  eps=args.eps,
                  batch_size=args.batch_size,
                  targeted=args.targeted,
-                 save=args.save)
+                 save=args.save,
+                 categorical=args.cat,
+                 args=args)
 
