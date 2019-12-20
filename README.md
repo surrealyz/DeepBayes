@@ -60,6 +60,11 @@ Once a classifier is trained, to test an attack, run e.g.
     cd test_attacks/
     python attack.py --data mnist --attack fgsm --eps 0.1 --victim bayes_K10_A --save
 
+
+For our categorical model, use `--cat` to use categorical distribution for generating x
+    
+    python attack.py --data spam --attack fgsm --eps 0.001 --victim spam_conv_vae_F_512_beta_0.001_ll_xe --cat --dimZ 512
+
 Here, the configs are:
 
 **--data**: should be one of {mnist, plane_frog, cifar10}, plane_frog refers to the CIFAR-binary dataset.
