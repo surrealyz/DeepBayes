@@ -63,7 +63,8 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     print('X_train.shape:', X_train.shape)
     print('Y_train.shape:', Y_train.shape)
 
-    ll = 'l2'
+    #ll = 'l2'
+    ll = 'xe'
     identity = lambda x: x
     fit, eval_acc = construct_optimizer(X_ph, Y_ph, [identity, enc], dec, ll, K, vae_type)
 
@@ -74,7 +75,7 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     if not os.path.isdir('save/'):
         os.mkdir('save/')
         print('create path save/')
-    path_name = data_name + '_conv_vae_%s' % (vae_type + '_' + str(dimZ)) + '_beta_{}/'.format(beta)
+    path_name = data_name + '_conv_vae_%s' % (vae_type + '_' + str(dimZ)) + '_beta_{}_ll_{}/'.format(beta, ll)
     if not os.path.isdir('save/'+path_name):
         os.mkdir('save/'+path_name)
         print('create path save/' + path_name)

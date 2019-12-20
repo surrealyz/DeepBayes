@@ -331,6 +331,8 @@ def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
     if ll == 'l1':
         ind = list(range(1, len(x_rep.get_shape().as_list())))
         logpx = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind)
+    if ll =='xe':
+        logpx = -tf.nn.softmax_cross_entropy_with_logits(labels=x_rep, logits=mu_x)
 
     logit_y = pyz(z)
     log_pyz = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y) 
