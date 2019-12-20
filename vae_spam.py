@@ -10,7 +10,7 @@ from alg.vae_new import construct_optimizer
 
 dimZ = 512
 dimH = 1024
-n_iter = 100
+n_iter = 300
 batch_size = 1000
 lr = 1e-4
 K = 1
