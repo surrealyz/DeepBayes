@@ -292,7 +292,7 @@ def encoding(enc_mlp, fea, y, K, use_mean=False, fix_samples=False, seed=0):
 #     return bound
 
 def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False, 
-               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0):
+               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0, categorical=False, x_cat=None):
     if use_mean:
         K = 1
         fix_samples=False
@@ -317,12 +317,16 @@ def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
     x_rep = x
     y_rep = y
 
+    if categorical:
+        x_rep = x_cat
+
     # prior
     log_prior_z = log_gaussian_prob(z, 0.0, 0.0)
 
     # decoders
     pyz, pxz = dec
     mu_x = pxz(z)
+
     if ll == 'bernoulli':
         logpx = log_bernoulli_prob(x_rep, mu_x)
     if ll == 'l2':
@@ -332,7 +336,10 @@ def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
         ind = list(range(1, len(x_rep.get_shape().as_list())))
         logpx = -tf.reduce_sum(tf.abs(x_rep - mu_x), ind)
     if ll =='xe':
-        logpx = -tf.nn.softmax_cross_entropy_with_logits(labels=x_rep, logits=mu_x)
+        print('label shape', x_rep.shape, mu_x.shape)
+        tmp = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=x_rep, logits=mu_x)
+        print("tmp", tmp.shape)
+        logpx = - tf.reduce_sum(tmp, axis=1)
 
     logit_y = pyz(z)
     log_pyz = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y) 

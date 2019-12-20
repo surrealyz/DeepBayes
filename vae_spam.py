@@ -18,13 +18,21 @@ checkpoint = -1
 global lambda_y
 
 
-def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
+
+def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint, categorical=False, bin_num=128):
     # load data
     beta = 0.001  # here beta
 
     from utils_spam import data_spam
     X_train, Y_train, X_test, Y_test = data_spam(train_start=0, train_end=295870,
                                                   test_start=0, test_end=126082)
+    # if categorical:
+    #     X_train_cat = categorize(X_train,bin_num)
+    #     X_test_cat = categorize(X_test,bin_num)
+    #     print(X_train_cat[0:10])
+    #     print(X_test_cat[0:10])
+    #     print('**********')
+
     print(X_train[0])
     print(Y_train[0])
     dimY = Y_train.shape[1]
@@ -39,8 +47,12 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     #     from conv_generator_mnist_D import generator
     # if vae_type == 'E':
     #     from conv_generator_mnist_E import generator
-    if vae_type == 'F': 
-        from models.mlp_generator_spam_F import generator
+    if vae_type == 'F':
+        if categorical:
+            from models.mlp_generator_categorical_spam_F import generator
+        else:
+            from models.mlp_generator_spam_F import generator
+
     # if vae_type == 'G':
     #     from models.conv_generator_mnist_G import generator
     # from conv_encoder_mnist import encoder_gaussian as encoder
@@ -51,13 +63,21 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     print('dimX:', dimX)
 
     # then define model
-    dec = generator(dimX, dimH, dimZ, dimY, 'linear', 'gen')
+    if categorical:
+        dec = generator(dimX, dimH, dimZ, dimY, 'linear', 'gen', bin_num=bin_num)
+    else:
+        dec = generator(dimX, dimH, dimZ, dimY, 'linear', 'gen')
     n_layers_enc = 2
     enc = encoder(dimX, dimH, dimZ, dimY, n_layers_enc, 'enc')
 
     # define optimisers
     X_ph = tf.placeholder(tf.float32, shape=(batch_size,)+input_shape)  #TODO: ??
     Y_ph = tf.placeholder(tf.float32, shape=(batch_size, dimY))
+    if categorical:
+        X_cat = tf.placeholder(tf.int32, shape=(batch_size, 25))
+    else:
+        X_cat = None
+
     print('X_ph.shape:', X_ph.shape)
     print('Y_ph.shape:', Y_ph.shape)
     print('X_train.shape:', X_train.shape)
@@ -66,7 +86,7 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
     #ll = 'l2'
     ll = 'xe'
     identity = lambda x: x
-    fit, eval_acc = construct_optimizer(X_ph, Y_ph, [identity, enc], dec, ll, K, vae_type)
+    fit, eval_acc = construct_optimizer(X_ph, Y_ph, [identity, enc], dec, ll, K, vae_type, categorical, X_cat)
 
     # initialise sessions
     config = tf.ConfigProto()
@@ -108,5 +128,5 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint):
 if __name__ == '__main__':
     data_name = 'spam'
     vae_type = str(sys.argv[1]) 
-    main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint)
+    main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint, categorical=True)
     
