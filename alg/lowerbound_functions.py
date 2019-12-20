@@ -292,7 +292,7 @@ def encoding(enc_mlp, fea, y, K, use_mean=False, fix_samples=False, seed=0):
 #     return bound
 
 def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False, 
-               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0, categorical=False, x_cat=None):
+               use_mean=False, fix_samples=False, seed=0, z=None, beta=1.0, categorical=False):
     if use_mean:
         K = 1
         fix_samples=False
@@ -318,7 +318,9 @@ def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
     y_rep = y
 
     if categorical:
-        x_rep = x_cat
+        # x_rep = x_cat
+        bin_num=128
+        x_rep = tf.dtypes.cast(x_rep * (bin_num-1), tf.int32)
 
     # prior
     log_prior_z = log_gaussian_prob(z, 0.0, 0.0)

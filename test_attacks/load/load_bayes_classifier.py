@@ -9,7 +9,7 @@ sys.path.extend([PATH+'alg/', PATH+'models/', PATH+'utils/'])
 class BayesModel:
     def __init__(self, sess, data_name, vae_type, conv=True, K=1, checkpoint=0, 
                  attack_snapshot=False, use_mean=False, fix_samples=False, no_z=False,
-                 dimZ=None, categorical=False, x_cat=None):
+                 dimZ=None, categorical=False):
         if data_name == 'mnist':
             self.num_channels = 1
             self.image_size = 28
@@ -45,7 +45,7 @@ class BayesModel:
         cla, test_ll, enc, dec = load_bayes_classifier(sess, data_name, vae_type, K, checkpoint, 
                                                        conv=conv, attack_snapshot=attack_snapshot, 
                                                        use_mean=use_mean, fix_samples=fix_samples, 
-                                                       no_z=no_z, dimZ=dimZ, categorical=categorical, x_cat=x_cat)
+                                                       no_z=no_z, dimZ=dimZ, categorical=categorical)
         self.model = cla
         self.eval_test_ll = test_ll
         self.enc = enc
@@ -91,7 +91,7 @@ def logsumexp(x):
 
 def bayes_classifier(x, enc, dec, ll, dimY, dimZ, lowerbound, K = 1, beta=1.0, use_mean=False,
                      fix_samples=False, snapshot=False, seed=0, no_z=False, softmax=False,
-                     categorical=False, x_cat=None):
+                     categorical=False):
     if use_mean: K=1
     enc_conv, enc_mlp = enc
     fea = enc_conv(x)
@@ -105,7 +105,7 @@ def bayes_classifier(x, enc, dec, ll, dimY, dimZ, lowerbound, K = 1, beta=1.0, u
     for i in range(dimY):
         y = np.zeros([N, dimY]); y[:, i] = 1; y = tf.constant(np.asarray(y, dtype='f'))
         bound, debug_list = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=False, beta=beta,
-                           use_mean=use_mean, fix_samples=fix_samples, seed=seed, z=z_holder, categorical=categorical, x_cat=x_cat)
+                           use_mean=use_mean, fix_samples=fix_samples, seed=seed, z=z_holder, categorical=categorical)
         print('bound shape', bound.shape)
         logpxy.append(tf.expand_dims(bound, 1))
     logpxy = tf.concat(logpxy, 1)
@@ -122,7 +122,7 @@ def bayes_classifier(x, enc, dec, ll, dimY, dimZ, lowerbound, K = 1, beta=1.0, u
 
 def load_bayes_classifier(sess, data_name, vae_type, K, checkpoint=0, conv=True, 
                           attack_snapshot=False, use_mean=False, fix_samples=False, no_z=False,
-                          dimZ=None, categorical=False, bin_num=128, x_cat=None):
+                          dimZ=None, categorical=False, bin_num=128):
     if data_name == 'mnist':
         input_shape = (28, 28, 1)
         dimX = 28**2
@@ -215,23 +215,23 @@ def load_bayes_classifier(sess, data_name, vae_type, K, checkpoint=0, conv=True,
 
     def comp_test_ll(x, y, K):
         fea = identity(x)
-        bound = lowerbound(x, fea, y, enc, dec, ll, K, IS=True, beta=beta, use_mean=use_mean, categorical=categorical, x_cat=x_cat)
+        bound = lowerbound(x, fea, y, enc, dec, ll, K, IS=True, beta=beta, use_mean=use_mean, categorical=categorical)
         return tf.reduce_mean(bound)
     
     def classifier(x):
-        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, K, beta, categorical=categorical, x_cat=x_cat)
+        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, K, beta, categorical=categorical)
         
     def classifier_snapshot(x):
-        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, K, beta, snapshot=True, categorical=categorical, x_cat=x_cat)
+        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, K, beta, snapshot=True, categorical=categorical)
     
     def classifier_use_mean(x):
-        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, 1, beta, use_mean=True, categorical=categorical, x_cat=x_cat)
+        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, 1, beta, use_mean=True, categorical=categorical)
     
     def classifier_fix_samples(x):
-        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, K, beta, fix_samples=True, categorical=categorical, x_cat=x_cat)
+        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, K, beta, fix_samples=True, categorical=categorical)
 
     def classifier_no_z(x):
-        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, K=1, beta=beta, no_z=True, categorical=categorical, x_cat=x_cat)
+        return bayes_classifier(x, [enc_conv, enc_mlp], dec, ll, dimY, dimZ, bound_func, K=1, beta=beta, no_z=True, categorical=categorical)
 
     if attack_snapshot:
         print("use %d samples, and attack each of them" % K)

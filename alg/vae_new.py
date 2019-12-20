@@ -10,7 +10,7 @@ def logsumexp(x):
     tmp = tf.log(tf.clip_by_value(tf.reduce_sum(tf.exp(x_), 0), 1e-9, np.inf))
     return tmp + x_max
 
-def bayes_classifier(x, enc, dec, ll, dimY, lowerbound, K = 1, beta=1.0, categorical=False, x_cat=None):
+def bayes_classifier(x, enc, dec, ll, dimY, lowerbound, K = 1, beta=1.0, categorical=False):
     enc_conv, enc_mlp = enc
     fea = enc_conv(x)
     N = x.get_shape().as_list()[0]
@@ -24,7 +24,7 @@ def bayes_classifier(x, enc, dec, ll, dimY, lowerbound, K = 1, beta=1.0, categor
         bound_sum=0
         mctimes=50
         for jj in range(mctimes):
-            bound, debug_list = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=True, beta=beta, categorical=categorical, x_cat=x_cat)
+            bound, debug_list = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=True, beta=beta, categorical=categorical)
             bound_sum += bound
 
         logpxy.append(tf.expand_dims(bound_sum/mctimes, 1))
@@ -42,7 +42,7 @@ def categorize(X, bin_num):
     X = X * (bin_num-1)
     return X.astype(int)
 
-def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A', categorical=False, x_cat=None):
+def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A', categorical=False):
 
     # loss function
     enc_conv, enc_mlp = enc
@@ -73,13 +73,13 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A', categorical=F
     #     from lowerbound_functions import lowerbound_G as lowerbound_func
 
     beta_ph = tf.placeholder(tf.float32, shape=(), name='beta')
-    bound, debug_list = lowerbound_func(X_, fea, Y_ph, enc_mlp, dec, ll_, K, IS=True, beta=beta_ph, categorical = categorical, x_cat=x_cat)
+    bound, debug_list = lowerbound_func(X_, fea, Y_ph, enc_mlp, dec, ll_, K, IS=True, beta=beta_ph, categorical = categorical)
     bound = tf.reduce_mean(bound)
     batch_size = X_ph.get_shape().as_list()[0]
 
     # also evaluate approx Bayes classifier's accuracy
     dimY = Y_ph.get_shape().as_list()[-1]
-    y_pred = bayes_classifier(X_, enc, dec, ll_, dimY, lowerbound_func, K=10, beta=beta_ph, categorical=categorical, x_cat=x_cat) # TODO: weired
+    y_pred = bayes_classifier(X_, enc, dec, ll_, dimY, lowerbound_func, K=10, beta=beta_ph, categorical=categorical) # TODO: weired
     correct_prediction = tf.equal(tf.argmax(Y_ph,1), tf.argmax(y_pred,1))
     acc_train = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
@@ -92,7 +92,7 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A', categorical=F
         return cost, logpx_z, logpy_z, negKL_value
 
     def train_cat(sess, X, X_catogrical, Y, lr, beta):
-        _, cost, logpx_z, logpy_z, negKL_value = sess.run(ops, feed_dict={X_ph: X, x_cat:X_catogrical, Y_ph: Y, lr_ph: lr, beta_ph: beta})
+        _, cost, logpx_z, logpy_z, negKL_value = sess.run(ops, feed_dict={X_ph: X, Y_ph: Y, lr_ph: lr, beta_ph: beta})
         return cost, logpx_z, logpy_z, negKL_value
 
     def fit(sess, X, Y, n_iter, lr, beta):
@@ -158,7 +158,7 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A', categorical=F
             begin = end
 
     def eval_categorical(sess, X, Y, data_name = 'train', beta=1.0):
-        X_categorical = categorize(np.copy(X), bin_num=128)
+        # X_categorical = categorize(np.copy(X), bin_num=128)
         N = X.shape[0]
         begin = time.time()
         n_batch = int(N / batch_size)
@@ -169,7 +169,7 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A', categorical=F
             indr = min((j+1) * batch_size, N)
             res1, res2 = sess.run((acc_train, bound), feed_dict={X_ph:X[indl:indr],
                                                                  Y_ph: Y[indl:indr],
-                                                                 x_cat: X_categorical[indl:indr],
+                                                                 # x_cat: X_categorical[indl:indr],
                                                                  beta_ph: beta})
             acc_total += res1 / n_batch
             bound_total += res2 / n_batch

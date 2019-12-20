@@ -73,10 +73,10 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint, cat
     # define optimisers
     X_ph = tf.placeholder(tf.float32, shape=(batch_size,)+input_shape)  #TODO: ??
     Y_ph = tf.placeholder(tf.float32, shape=(batch_size, dimY))
-    if categorical:
-        X_cat = tf.placeholder(tf.int32, shape=(batch_size, 25))
-    else:
-        X_cat = None
+    # if categorical:
+    #     X_cat = tf.placeholder(tf.int32, shape=(batch_size, 25))
+    # else:
+    # X_cat = None
 
     print('X_ph.shape:', X_ph.shape)
     print('Y_ph.shape:', Y_ph.shape)
@@ -86,7 +86,7 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint, cat
     #ll = 'l2'
     ll = 'xe'
     identity = lambda x: x
-    fit, eval_acc = construct_optimizer(X_ph, Y_ph, [identity, enc], dec, ll, K, vae_type, categorical, X_cat)
+    fit, eval_acc = construct_optimizer(X_ph, Y_ph, [identity, enc], dec, ll, K, vae_type, categorical)
 
     # initialise sessions
     config = tf.ConfigProto()

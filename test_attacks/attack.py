@@ -64,13 +64,10 @@ def test_attacks(data_name, model_name, attack_method, eps, batch_size=100,
     print('use batch_size = %d' % batch_size)
     x = tf.placeholder(tf.float32, shape=(batch_size, 25))
     y = tf.placeholder(tf.float32, shape=(batch_size, 2))
-    if categorical:
-        X_cat = tf.placeholder(tf.int32, shape=(batch_size, 25))
-    else:
-        X_cat = None
+
 
     # Define TF model graph  
-    model = load_classifier(sess, model_name, data_name, categorical=categorical, x_cat=X_cat, dimZ=args.dimZ)
+    model = load_classifier(sess, model_name, data_name, categorical=categorical, dimZ=args.dimZ)
     if 'bayes' in model_name and 'distill' not in model_name and 'query' not in model_name:
         model_name = model_name + '_cnn'
 
