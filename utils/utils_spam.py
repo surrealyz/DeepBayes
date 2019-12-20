@@ -38,6 +38,8 @@ def data_spam(datadir='/home/yz/code/trees/twitter_spam/', train_start=0, train_
 
     if socket.gethostname() == 'deep':
         datadir = '/home/mcz/Desktop/courses_2019F/DavidBlei/Project/'
+    elif socket.gethostname() == 'hulk':
+        datadir = '/home/mcz/Spam'
     
     train = np.loadtxt(datadir+"twitter_spam_reduced.train.csv", delimiter=",")
     test = np.loadtxt(datadir+"twitter_spam_reduced.test.csv", delimiter=",")
