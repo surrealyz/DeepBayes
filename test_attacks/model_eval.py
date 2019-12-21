@@ -86,12 +86,26 @@ def model_eval(sess, x, y, logits, X_test=None, Y_test=None,
         feed_dict = {x: X_cur, y: Y_cur}#, K.learning_phase(): 0}
         if feed is not None:
             feed_dict.update(feed)
-        y_, cur_corr_preds = sess.run((logits, correct_preds), 
-                                          feed_dict=feed_dict)
-        if return_pred:
-            y_pred.append(y_)
 
-        accuracy += cur_corr_preds[:cur_batch_size].sum()
+        mctimes=3
+
+        for ii in range(mctimes):
+            y_ = sess.run(logits, feed_dict=feed_dict)
+            if ii==0:
+                logits_sum = y_
+            else:
+                logits_sum = logits_sum + y_
+
+        if return_pred:
+            y_pred.append(logits_sum)
+
+        pred_label = np.argmax(logits_sum, axis=1)
+        gt_label = np.argmax(Y_cur, axis=1)
+        equal = pred_label == gt_label
+        correct_num = np.sum(equal[:cur_batch_size])
+        accuracy += correct_num
+
+        # accuracy += cur_corr_preds[:cur_batch_size].sum()
 
     assert end >= len(X_test)
 

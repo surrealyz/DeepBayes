@@ -9,7 +9,7 @@ sys.path.extend([PATH+'alg/', PATH+'models/', PATH+'utils/'])
 class BayesModel:
     def __init__(self, sess, data_name, vae_type, conv=True, K=1, checkpoint=0, 
                  attack_snapshot=False, use_mean=False, fix_samples=False, no_z=False,
-                 dimZ=None, categorical=False):
+                 dimZ=None, categorical=False, args=None):
         if data_name == 'mnist':
             self.num_channels = 1
             self.image_size = 28
@@ -45,7 +45,7 @@ class BayesModel:
         cla, test_ll, enc, dec = load_bayes_classifier(sess, data_name, vae_type, K, checkpoint, 
                                                        conv=conv, attack_snapshot=attack_snapshot, 
                                                        use_mean=use_mean, fix_samples=fix_samples, 
-                                                       no_z=no_z, dimZ=dimZ, categorical=categorical)
+                                                       no_z=no_z, dimZ=dimZ, categorical=categorical, beta=args.beta)
         self.model = cla
         self.eval_test_ll = test_ll
         self.enc = enc
@@ -122,7 +122,7 @@ def bayes_classifier(x, enc, dec, ll, dimY, dimZ, lowerbound, K = 1, beta=1.0, u
 
 def load_bayes_classifier(sess, data_name, vae_type, K, checkpoint=0, conv=True, 
                           attack_snapshot=False, use_mean=False, fix_samples=False, no_z=False,
-                          dimZ=None, categorical=False, bin_num=128):
+                          dimZ=None, categorical=False, bin_num=128, beta=None):
     if data_name == 'mnist':
         input_shape = (28, 28, 1)
         dimX = 28**2
@@ -152,7 +152,7 @@ def load_bayes_classifier(sess, data_name, vae_type, K, checkpoint=0, conv=True,
         ll = 'l2'
         if categorical:
             ll = 'xe'
-        beta = 0.001
+
         dimX = 25
         dimY = 2
     # if data_name in ['cifar10', 'svhn', 'plane_frog']:
@@ -265,5 +265,6 @@ def load_params(sess, filename, checkpoint):
         else:
             var_to_init.append(v)
     sess.run(ops)
+    print("*\n***\n*")
     print('loaded parameters from ' + filename + '.pkl')
  

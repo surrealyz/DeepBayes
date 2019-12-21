@@ -45,6 +45,9 @@ def test_attacks(data_name, model_name, attack_method, eps, batch_size=100,
         print(X_train[0])
         print(Y_train[0])
 
+        X_test = X_test[:1000,:] #TODO: if want to test only on a subset
+        Y_test = Y_test[:1000,:]
+
     # if data_name in ['cifar10', 'plane_frog']:
     #     from import_data_cifar10 import load_data_cifar10
     #     if data_name == 'plane_frog':
@@ -67,7 +70,7 @@ def test_attacks(data_name, model_name, attack_method, eps, batch_size=100,
 
 
     # Define TF model graph  
-    model = load_classifier(sess, model_name, data_name, categorical=categorical, dimZ=args.dimZ)
+    model = load_classifier(sess, model_name, data_name, categorical=categorical, dimZ=args.dimZ, args=args)
     if 'bayes' in model_name and 'distill' not in model_name and 'query' not in model_name:
         model_name = model_name + '_cnn'
 
@@ -166,6 +169,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run RVAE experiments.')
     parser.add_argument('--batch_size', '-B', type=int, default=100)
     parser.add_argument('--dimZ', '-Z', type=int, default=512)
+    parser.add_argument('--beta', '-w', type=float, default=0.1)
     parser.add_argument('--data', '-D', type=str, default='plane_frog')
     parser.add_argument('--targeted', '-T', action='store_true', default=False)
     parser.add_argument('--attack', '-A', type=str, default='pgd')

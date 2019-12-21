@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 def load_classifier(sess, model_name, data_name, path=None,
-                    attack_snapshot=False, categorical=False, dimZ=None):
+                    attack_snapshot=False, categorical=False, dimZ=None, args=None):
 
     if 'bayes' in model_name:
         from load_bayes_classifier import BayesModel
@@ -76,7 +76,7 @@ def load_classifier(sess, model_name, data_name, path=None,
         #         dimZ = 128
         model = BayesModel(sess, data_name, "F", conv, 1, checkpoint=checkpoint,
                            attack_snapshot=attack_snapshot, use_mean=use_mean, fix_samples=fix_samples,
-                           dimZ=dimZ, categorical=categorical)
+                           dimZ=dimZ, categorical=categorical, args=args)
 
     return model
 
