@@ -1,0 +1,23 @@
+===== total:1000, num of queries:1000 =====
+attack data approx Bayes classifier acc=63.70, logpxy=-72.84, bound=-69.76, time=161.21, beta=1.00
+===== total:2000, num of queries:1000 =====
+attack data approx Bayes classifier acc=57.75, logpxy=-77.94, bound=-74.96, time=258.93, beta=1.00
+===== total:4000, num of queries:2000 =====
+attack data approx Bayes classifier acc=57.75, logpxy=-77.94, bound=-74.98, time=542.28, beta=1.00
+===== total:8000, num of queries:4000 =====
+attack data approx Bayes classifier acc=57.74, logpxy=-77.94, bound=-74.93, time=1055.24, beta=1.00
+===== total:16000, num of queries:8000 =====
+attack data approx Bayes classifier acc=57.76, logpxy=-77.94, bound=-74.94, time=2136.68, beta=1.00
+
+
+===== total:1000, num of queries:1000 =====
+attack data approx Bayes classifier acc=10.10, logpxy=-79.75, bound=-79.81, time=147.67, beta=1.00
+===== total:2000, num of queries:1000 =====
+attack data approx Bayes classifier acc=10.65, logpxy=-80.44, bound=-80.51, time=266.78, beta=1.00
+===== total:4000, num of queries:2000 =====
+attack data approx Bayes classifier acc=9.40, logpxy=-80.15, bound=-80.14, time=533.59, beta=1.00
+===== total:8000, num of queries:4000 =====
+attack data approx Bayes classifier acc=9.62, logpxy=-79.65, bound=-79.68, time=1669.65, beta=1.00
+===== total:16000, num of queries:8000 =====
+attack data approx Bayes classifier acc=9.71, logpxy=-79.52, bound=-79.55, time=2196.66, beta=1.00
+

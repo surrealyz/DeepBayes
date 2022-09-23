@@ -14,7 +14,7 @@ n_iter = 200
 batch_size = 50
 lr = 5e-5
 K = 1
-checkpoint = -1
+#checkpoint = -1
 data_path = 'cifar_data/'
 
 def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint, data_path):
@@ -22,6 +22,8 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint, dat
     from import_data_cifar10 import load_data_cifar10
     if data_name == 'plane_frog':
         labels = [0, 6]
+    else:
+        labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     X_train, X_test, Y_train, Y_test = load_data_cifar10(data_path, labels=labels, conv=True)
     dimY = Y_train.shape[1]
 
@@ -83,7 +85,9 @@ def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint, dat
     checkpoint += 1
 
 if __name__ == '__main__':
-    data_name = 'plane_frog'
-    vae_type = str(sys.argv[1]) 
+    data_name = 'all'
+    vae_type = str(sys.argv[1])
+    global checkpoint
+    checkpoint = int(sys.argv[2])
     main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint, data_path)
     

@@ -22,6 +22,10 @@ def main(data_name, vae_type, fea_layer, n_iter, batch_size, K, checkpoint, data
     from import_data_cifar10 import load_data_cifar10
     X_train, X_test, Y_train, Y_test = load_data_cifar10(data_path, conv=True)
     dimY = Y_train.shape[1]
+    print('******* dimY:', dimY)
+    print('******* Y_train.shape:', Y_train.shape)
+    print('******* X_train.shape:', X_train.shape)
+    print(Y_train[0])
 
     if vae_type == 'E': 
         from mlp_generator_cifar10_E import generator

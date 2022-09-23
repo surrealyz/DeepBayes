@@ -1,0 +1,24 @@
+decoder shared Conv Net of size [(4, 4, 256), (8, 8, 128), (16, 16, 64), (32, 32, 3)]
+encoder shared Conv net  network architecture: [(16, 16, 64), (8, 8, 128), (4, 4, 256)] [1000]
+training from scratch
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-170.99038, p(x|z)=-165.02584, p(y|z)=-2.24952, KL=3.71502, time=196.05
+Iter 2, ELBO=-122.04335, p(x|z)=-109.16666, p(y|z)=-2.11636, KL=10.76033, time=201.14
+Iter 3, ELBO=-109.88749, p(x|z)=-95.54241, p(y|z)=-2.07990, KL=12.26519, time=195.99
+Iter 4, ELBO=-101.40289, p(x|z)=-86.62231, p(y|z)=-2.01958, KL=12.76100, time=197.36
+Iter 5, ELBO=-97.04064, p(x|z)=-81.82614, p(y|z)=-1.98269, KL=13.23180, time=200.75
+Iter 6, ELBO=-94.82575, p(x|z)=-79.00322, p(y|z)=-1.95042, KL=13.87211, time=195.40
+Iter 7, ELBO=-92.73531, p(x|z)=-76.35317, p(y|z)=-1.90692, KL=14.47522, time=198.27
+Iter 8, ELBO=-89.32208, p(x|z)=-71.82863, p(y|z)=-1.85204, KL=15.64141, time=195.15
+Iter 9, ELBO=-87.37622, p(x|z)=-69.34741, p(y|z)=-1.81831, KL=16.21050, time=197.32
+Iter 10, ELBO=-86.37351, p(x|z)=-68.09114, p(y|z)=-1.79891, KL=16.48346, time=201.24
+test data approx Bayes classifier acc=33.25, logpxy=-86.85, bound=-85.77, time=2825.92, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-85.45931, p(x|z)=-66.83487, p(y|z)=-1.77207, KL=16.85237, time=200.32
+Iter 2, ELBO=-84.75005, p(x|z)=-65.87835, p(y|z)=-1.75668, KL=17.11502, time=204.61
+Iter 3, ELBO=-83.91113, p(x|z)=-64.84738, p(y|z)=-1.74627, KL=17.31748, time=200.66
+Iter 4, ELBO=-83.25498, p(x|z)=-64.10906, p(y|z)=-1.73175, KL=17.41417, time=196.88
+decoder shared Conv Net of size [(4, 4, 256), (8, 8, 128), (16, 16, 64), (32, 32, 3)]
+encoder shared Conv net  network architecture: [(16, 16, 64), (8, 8, 128), (4, 4, 256)] [1000]
+training from scratch
+training for 10 epochs with lr=0.00005, beta=1.00

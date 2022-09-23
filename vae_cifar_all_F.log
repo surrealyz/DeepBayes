@@ -1,0 +1,261 @@
+decoder shared Conv Net of size [(4, 4, 256), (8, 8, 128), (16, 16, 64), (32, 32, 3)]
+encoder shared Conv net  network architecture: [(16, 16, 64), (8, 8, 128), (4, 4, 256)] [1000]
+training from scratch
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-170.99038, p(x|z)=-165.02584, p(y|z)=-2.24952, KL=3.71502, time=201.02
+Iter 2, ELBO=-122.04335, p(x|z)=-109.16666, p(y|z)=-2.11636, KL=10.76033, time=202.12
+Iter 3, ELBO=-109.88749, p(x|z)=-95.54241, p(y|z)=-2.07990, KL=12.26519, time=198.92
+Iter 4, ELBO=-101.40289, p(x|z)=-86.62231, p(y|z)=-2.01958, KL=12.76100, time=205.38
+Iter 5, ELBO=-97.04064, p(x|z)=-81.82614, p(y|z)=-1.98269, KL=13.23180, time=200.98
+Iter 6, ELBO=-94.82575, p(x|z)=-79.00322, p(y|z)=-1.95042, KL=13.87211, time=201.57
+Iter 7, ELBO=-92.73531, p(x|z)=-76.35317, p(y|z)=-1.90692, KL=14.47522, time=197.00
+Iter 8, ELBO=-89.32208, p(x|z)=-71.82863, p(y|z)=-1.85204, KL=15.64141, time=199.02
+Iter 9, ELBO=-87.37622, p(x|z)=-69.34741, p(y|z)=-1.81831, KL=16.21050, time=198.69
+Iter 10, ELBO=-86.37351, p(x|z)=-68.09114, p(y|z)=-1.79891, KL=16.48346, time=200.97
+test data approx Bayes classifier acc=33.25, logpxy=-86.85, bound=-85.77, time=2768.68, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-85.45931, p(x|z)=-66.83487, p(y|z)=-1.77207, KL=16.85237, time=199.45
+Iter 2, ELBO=-84.75005, p(x|z)=-65.87835, p(y|z)=-1.75668, KL=17.11502, time=201.72
+Iter 3, ELBO=-83.91113, p(x|z)=-64.84738, p(y|z)=-1.74627, KL=17.31748, time=194.84
+Iter 4, ELBO=-83.25498, p(x|z)=-64.10906, p(y|z)=-1.73175, KL=17.41417, time=198.25
+Iter 5, ELBO=-82.76162, p(x|z)=-63.60339, p(y|z)=-1.72114, KL=17.43710, time=202.00
+Iter 6, ELBO=-82.36086, p(x|z)=-63.18021, p(y|z)=-1.71397, KL=17.46668, time=198.21
+Iter 7, ELBO=-82.07709, p(x|z)=-62.89645, p(y|z)=-1.70239, KL=17.47825, time=193.17
+Iter 8, ELBO=-81.79941, p(x|z)=-62.59765, p(y|z)=-1.69159, KL=17.51016, time=195.73
+Iter 9, ELBO=-81.55594, p(x|z)=-62.29583, p(y|z)=-1.68364, KL=17.57647, time=198.01
+Iter 10, ELBO=-81.31007, p(x|z)=-61.95394, p(y|z)=-1.67495, KL=17.68118, time=193.41
+test data approx Bayes classifier acc=39.19, logpxy=-82.57, bound=-81.17, time=2780.21, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-81.10055, p(x|z)=-61.66688, p(y|z)=-1.66195, KL=17.77171, time=200.00
+Iter 2, ELBO=-80.87488, p(x|z)=-61.33941, p(y|z)=-1.65593, KL=17.87955, time=200.56
+Iter 3, ELBO=-80.68716, p(x|z)=-61.10884, p(y|z)=-1.64711, KL=17.93121, time=200.20
+Iter 4, ELBO=-80.55444, p(x|z)=-60.90707, p(y|z)=-1.64387, KL=18.00350, time=200.56
+Iter 5, ELBO=-80.32375, p(x|z)=-60.60899, p(y|z)=-1.63552, KL=18.07924, time=196.87
+Iter 6, ELBO=-80.14189, p(x|z)=-60.32976, p(y|z)=-1.62852, KL=18.18361, time=197.77
+Iter 7, ELBO=-79.95401, p(x|z)=-60.05457, p(y|z)=-1.62465, KL=18.27478, time=197.44
+Iter 8, ELBO=-79.78367, p(x|z)=-59.80280, p(y|z)=-1.61270, KL=18.36817, time=195.64
+Iter 9, ELBO=-79.58809, p(x|z)=-59.51278, p(y|z)=-1.60927, KL=18.46604, time=200.83
+Iter 10, ELBO=-79.40650, p(x|z)=-59.24693, p(y|z)=-1.60356, KL=18.55601, time=198.80
+test data approx Bayes classifier acc=41.54, logpxy=-81.43, bound=-79.79, time=2782.13, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-79.21814, p(x|z)=-58.98091, p(y|z)=-1.59840, KL=18.63883, time=199.75
+Iter 2, ELBO=-79.07238, p(x|z)=-58.77609, p(y|z)=-1.59392, KL=18.70237, time=198.17
+Iter 3, ELBO=-78.93252, p(x|z)=-58.56609, p(y|z)=-1.58556, KL=18.78086, time=198.91
+Iter 4, ELBO=-78.75925, p(x|z)=-58.34260, p(y|z)=-1.57783, KL=18.83882, time=191.57
+Iter 5, ELBO=-78.63312, p(x|z)=-58.13474, p(y|z)=-1.57456, KL=18.92382, time=194.15
+Iter 6, ELBO=-78.47691, p(x|z)=-57.92894, p(y|z)=-1.56565, KL=18.98231, time=199.85
+Iter 7, ELBO=-78.36010, p(x|z)=-57.76138, p(y|z)=-1.56149, KL=19.03722, time=196.46
+Iter 8, ELBO=-78.24189, p(x|z)=-57.61404, p(y|z)=-1.55570, KL=19.07215, time=200.14
+Iter 9, ELBO=-78.12432, p(x|z)=-57.45933, p(y|z)=-1.55058, KL=19.11441, time=199.35
+Iter 10, ELBO=-78.01359, p(x|z)=-57.33441, p(y|z)=-1.54343, KL=19.13576, time=200.38
+test data approx Bayes classifier acc=43.63, logpxy=-80.09, bound=-78.34, time=2835.23, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-77.95903, p(x|z)=-57.22511, p(y|z)=-1.54053, KL=19.19339, time=203.23
+Iter 2, ELBO=-77.84774, p(x|z)=-57.09808, p(y|z)=-1.53568, KL=19.21398, time=206.68
+Iter 3, ELBO=-77.71205, p(x|z)=-56.94079, p(y|z)=-1.52492, KL=19.24635, time=204.21
+Iter 4, ELBO=-77.63250, p(x|z)=-56.84581, p(y|z)=-1.52208, KL=19.26461, time=204.33
+Iter 5, ELBO=-77.52832, p(x|z)=-56.69501, p(y|z)=-1.51972, KL=19.31359, time=202.24
+Iter 6, ELBO=-77.43583, p(x|z)=-56.58767, p(y|z)=-1.51237, KL=19.33579, time=205.47
+Iter 7, ELBO=-77.33626, p(x|z)=-56.47868, p(y|z)=-1.50847, KL=19.34911, time=202.25
+Iter 8, ELBO=-77.23928, p(x|z)=-56.34373, p(y|z)=-1.50378, KL=19.39178, time=201.47
+Iter 9, ELBO=-77.16550, p(x|z)=-56.23925, p(y|z)=-1.50148, KL=19.42476, time=204.47
+Iter 10, ELBO=-77.11991, p(x|z)=-56.16640, p(y|z)=-1.49408, KL=19.45943, time=207.58
+test data approx Bayes classifier acc=44.92, logpxy=-79.45, bound=-77.55, time=2707.67, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-76.99006, p(x|z)=-56.03267, p(y|z)=-1.49340, KL=19.46398, time=148.50
+Iter 2, ELBO=-76.90667, p(x|z)=-55.92390, p(y|z)=-1.48674, KL=19.49603, time=147.40
+Iter 3, ELBO=-76.84383, p(x|z)=-55.84171, p(y|z)=-1.48205, KL=19.52008, time=147.87
+Iter 4, ELBO=-76.75429, p(x|z)=-55.72300, p(y|z)=-1.48181, KL=19.54948, time=143.91
+Iter 5, ELBO=-76.69683, p(x|z)=-55.64297, p(y|z)=-1.47477, KL=19.57909, time=145.38
+Iter 6, ELBO=-76.63305, p(x|z)=-55.55007, p(y|z)=-1.47218, KL=19.61081, time=145.59
+Iter 7, ELBO=-76.58180, p(x|z)=-55.46877, p(y|z)=-1.47190, KL=19.64113, time=146.77
+Iter 8, ELBO=-76.48851, p(x|z)=-55.34275, p(y|z)=-1.46781, KL=19.67795, time=145.72
+Iter 9, ELBO=-76.43750, p(x|z)=-55.25561, p(y|z)=-1.46319, KL=19.71869, time=145.52
+Iter 10, ELBO=-76.33393, p(x|z)=-55.14332, p(y|z)=-1.45305, KL=19.73756, time=152.03
+test data approx Bayes classifier acc=45.66, logpxy=-79.06, bound=-77.07, time=1557.83, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-76.28454, p(x|z)=-55.04915, p(y|z)=-1.45756, KL=19.77783, time=95.51
+Iter 2, ELBO=-76.20245, p(x|z)=-54.94731, p(y|z)=-1.45022, KL=19.80491, time=94.85
+Iter 3, ELBO=-76.15522, p(x|z)=-54.86028, p(y|z)=-1.44578, KL=19.84916, time=95.40
+Iter 4, ELBO=-76.06586, p(x|z)=-54.74706, p(y|z)=-1.44101, KL=19.87779, time=95.37
+Iter 5, ELBO=-75.98622, p(x|z)=-54.64356, p(y|z)=-1.44087, KL=19.90179, time=95.79
+Iter 6, ELBO=-75.96525, p(x|z)=-54.58576, p(y|z)=-1.43497, KL=19.94452, time=94.96
+Iter 7, ELBO=-75.87123, p(x|z)=-54.47446, p(y|z)=-1.43532, KL=19.96145, time=95.06
+Iter 8, ELBO=-75.83720, p(x|z)=-54.39621, p(y|z)=-1.43141, KL=20.00958, time=95.16
+Iter 9, ELBO=-75.79588, p(x|z)=-54.33304, p(y|z)=-1.42681, KL=20.03603, time=96.00
+Iter 10, ELBO=-75.69586, p(x|z)=-54.22985, p(y|z)=-1.42373, KL=20.04227, time=95.34
+test data approx Bayes classifier acc=46.59, logpxy=-78.55, bound=-76.50, time=1335.31, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-75.66130, p(x|z)=-54.15780, p(y|z)=-1.41861, KL=20.08490, time=95.32
+Iter 2, ELBO=-75.60590, p(x|z)=-54.07169, p(y|z)=-1.41473, KL=20.11948, time=95.66
+Iter 3, ELBO=-75.52721, p(x|z)=-53.98271, p(y|z)=-1.41305, KL=20.13145, time=95.68
+Iter 4, ELBO=-75.49809, p(x|z)=-53.94589, p(y|z)=-1.41265, KL=20.13955, time=95.05
+Iter 5, ELBO=-75.43255, p(x|z)=-53.83877, p(y|z)=-1.40637, KL=20.18741, time=95.07
+Iter 6, ELBO=-75.36536, p(x|z)=-53.75862, p(y|z)=-1.40089, KL=20.20585, time=95.41
+Iter 7, ELBO=-75.32508, p(x|z)=-53.69659, p(y|z)=-1.39878, KL=20.22972, time=95.46
+Iter 8, ELBO=-75.27232, p(x|z)=-53.63466, p(y|z)=-1.39679, KL=20.24087, time=95.38
+Iter 9, ELBO=-75.24374, p(x|z)=-53.58632, p(y|z)=-1.39345, KL=20.26397, time=94.86
+Iter 10, ELBO=-75.19260, p(x|z)=-53.50247, p(y|z)=-1.39000, KL=20.30012, time=95.13
+test data approx Bayes classifier acc=47.39, logpxy=-78.63, bound=-76.42, time=1336.30, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-75.14777, p(x|z)=-53.44816, p(y|z)=-1.39108, KL=20.30853, time=95.73
+Iter 2, ELBO=-75.10541, p(x|z)=-53.38482, p(y|z)=-1.38578, KL=20.33481, time=95.11
+Iter 3, ELBO=-75.06442, p(x|z)=-53.33314, p(y|z)=-1.38298, KL=20.34830, time=95.43
+Iter 4, ELBO=-75.01812, p(x|z)=-53.25640, p(y|z)=-1.38186, KL=20.37987, time=95.39
+Iter 5, ELBO=-74.95700, p(x|z)=-53.20799, p(y|z)=-1.37369, KL=20.37533, time=95.96
+Iter 6, ELBO=-74.94108, p(x|z)=-53.16519, p(y|z)=-1.37378, KL=20.40211, time=95.62
+Iter 7, ELBO=-74.88986, p(x|z)=-53.10060, p(y|z)=-1.37134, KL=20.41793, time=94.97
+Iter 8, ELBO=-74.85317, p(x|z)=-53.04780, p(y|z)=-1.36632, KL=20.43904, time=95.40
+Iter 9, ELBO=-74.81826, p(x|z)=-52.99304, p(y|z)=-1.36378, KL=20.46144, time=95.50
+Iter 10, ELBO=-74.77512, p(x|z)=-52.95332, p(y|z)=-1.35611, KL=20.46570, time=95.40
+test data approx Bayes classifier acc=47.80, logpxy=-78.36, bound=-76.11, time=1335.68, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-74.73890, p(x|z)=-52.87963, p(y|z)=-1.36237, KL=20.49689, time=95.11
+Iter 2, ELBO=-74.68543, p(x|z)=-52.83939, p(y|z)=-1.35385, KL=20.49218, time=95.30
+Iter 3, ELBO=-74.65490, p(x|z)=-52.78656, p(y|z)=-1.35315, KL=20.51519, time=95.88
+Iter 4, ELBO=-74.58800, p(x|z)=-52.71543, p(y|z)=-1.35116, KL=20.52141, time=94.96
+Iter 5, ELBO=-74.56694, p(x|z)=-52.69602, p(y|z)=-1.34622, KL=20.52470, time=95.11
+Iter 6, ELBO=-74.52719, p(x|z)=-52.62617, p(y|z)=-1.34598, KL=20.55504, time=95.29
+Iter 7, ELBO=-74.51952, p(x|z)=-52.60385, p(y|z)=-1.34288, KL=20.57280, time=95.55
+Iter 8, ELBO=-74.45270, p(x|z)=-52.52516, p(y|z)=-1.33783, KL=20.58970, time=95.24
+Iter 9, ELBO=-74.40744, p(x|z)=-52.48566, p(y|z)=-1.33518, KL=20.58660, time=94.95
+Iter 10, ELBO=-74.38561, p(x|z)=-52.44410, p(y|z)=-1.33134, KL=20.61017, time=95.22
+test data approx Bayes classifier acc=48.46, logpxy=-78.16, bound=-75.87, time=1336.84, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-74.34919, p(x|z)=-52.41599, p(y|z)=-1.33166, KL=20.60154, time=95.70
+Iter 2, ELBO=-74.31669, p(x|z)=-52.33835, p(y|z)=-1.32802, KL=20.65031, time=94.79
+Iter 3, ELBO=-74.29512, p(x|z)=-52.31522, p(y|z)=-1.32757, KL=20.65233, time=95.25
+Iter 4, ELBO=-74.23846, p(x|z)=-52.25557, p(y|z)=-1.32382, KL=20.65907, time=95.40
+Iter 5, ELBO=-74.19592, p(x|z)=-52.22311, p(y|z)=-1.31688, KL=20.65593, time=95.71
+Iter 6, ELBO=-74.15760, p(x|z)=-52.16335, p(y|z)=-1.31885, KL=20.67541, time=95.24
+Iter 7, ELBO=-74.12404, p(x|z)=-52.12644, p(y|z)=-1.31327, KL=20.68433, time=95.27
+Iter 8, ELBO=-74.10425, p(x|z)=-52.08722, p(y|z)=-1.31202, KL=20.70501, time=95.26
+Iter 9, ELBO=-74.06696, p(x|z)=-52.04830, p(y|z)=-1.31145, KL=20.70721, time=95.79
+Iter 10, ELBO=-74.04296, p(x|z)=-52.01738, p(y|z)=-1.30664, KL=20.71894, time=95.25
+test data approx Bayes classifier acc=48.78, logpxy=-78.21, bound=-75.86, time=1336.39, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-73.98382, p(x|z)=-51.94328, p(y|z)=-1.30090, KL=20.73963, time=95.22
+Iter 2, ELBO=-73.94852, p(x|z)=-51.90162, p(y|z)=-1.30151, KL=20.74539, time=95.85
+Iter 3, ELBO=-73.92152, p(x|z)=-51.86799, p(y|z)=-1.29840, KL=20.75513, time=95.44
+Iter 4, ELBO=-73.86945, p(x|z)=-51.79564, p(y|z)=-1.29454, KL=20.77927, time=95.25
+Iter 5, ELBO=-73.87122, p(x|z)=-51.79520, p(y|z)=-1.29090, KL=20.78512, time=94.98
+Iter 6, ELBO=-73.80281, p(x|z)=-51.72801, p(y|z)=-1.29013, KL=20.78467, time=95.11
+Iter 7, ELBO=-73.79572, p(x|z)=-51.69319, p(y|z)=-1.28843, KL=20.81410, time=95.56
+Iter 8, ELBO=-73.74978, p(x|z)=-51.64766, p(y|z)=-1.28251, KL=20.81961, time=95.50
+Iter 9, ELBO=-73.74577, p(x|z)=-51.63035, p(y|z)=-1.28475, KL=20.83067, time=95.34
+Iter 10, ELBO=-73.66714, p(x|z)=-51.54159, p(y|z)=-1.27835, KL=20.84719, time=95.48
+test data approx Bayes classifier acc=49.01, logpxy=-78.14, bound=-75.79, time=1336.30, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-73.65042, p(x|z)=-51.52420, p(y|z)=-1.27709, KL=20.84914, time=95.39
+Iter 2, ELBO=-73.61394, p(x|z)=-51.48166, p(y|z)=-1.27494, KL=20.85734, time=94.90
+Iter 3, ELBO=-73.58195, p(x|z)=-51.43011, p(y|z)=-1.27329, KL=20.87854, time=95.18
+Iter 4, ELBO=-73.52275, p(x|z)=-51.36534, p(y|z)=-1.26893, KL=20.88848, time=95.69
+Iter 5, ELBO=-73.50034, p(x|z)=-51.32620, p(y|z)=-1.26803, KL=20.90611, time=95.78
+Iter 6, ELBO=-73.49090, p(x|z)=-51.31458, p(y|z)=-1.26536, KL=20.91097, time=95.08
+Iter 7, ELBO=-73.43640, p(x|z)=-51.25096, p(y|z)=-1.26180, KL=20.92364, time=94.95
+Iter 8, ELBO=-73.41003, p(x|z)=-51.21241, p(y|z)=-1.25930, KL=20.93832, time=95.22
+Iter 9, ELBO=-73.36855, p(x|z)=-51.15892, p(y|z)=-1.25727, KL=20.95237, time=95.85
+Iter 10, ELBO=-73.35234, p(x|z)=-51.14097, p(y|z)=-1.24982, KL=20.96154, time=95.50
+test data approx Bayes classifier acc=48.52, logpxy=-78.41, bound=-76.02, time=1337.04, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-73.29452, p(x|z)=-51.08275, p(y|z)=-1.25504, KL=20.95673, time=95.68
+Iter 2, ELBO=-73.27037, p(x|z)=-51.04083, p(y|z)=-1.24765, KL=20.98189, time=95.52
+Iter 3, ELBO=-73.22841, p(x|z)=-51.00082, p(y|z)=-1.24898, KL=20.97861, time=95.50
+Iter 4, ELBO=-73.19858, p(x|z)=-50.95764, p(y|z)=-1.24128, KL=20.99965, time=95.22
+Iter 5, ELBO=-73.17604, p(x|z)=-50.90628, p(y|z)=-1.23858, KL=21.03118, time=95.15
+Iter 6, ELBO=-73.13466, p(x|z)=-50.88013, p(y|z)=-1.24090, KL=21.01363, time=95.43
+Iter 7, ELBO=-73.09576, p(x|z)=-50.82766, p(y|z)=-1.23707, KL=21.03103, time=95.45
+Iter 8, ELBO=-73.03417, p(x|z)=-50.77619, p(y|z)=-1.23288, KL=21.02510, time=95.33
+Iter 9, ELBO=-73.03382, p(x|z)=-50.73830, p(y|z)=-1.22854, KL=21.06698, time=95.03
+Iter 10, ELBO=-72.99222, p(x|z)=-50.69022, p(y|z)=-1.22777, KL=21.07423, time=95.36
+test data approx Bayes classifier acc=49.54, logpxy=-78.33, bound=-75.86, time=1336.82, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-72.94607, p(x|z)=-50.64876, p(y|z)=-1.22634, KL=21.07096, time=95.61
+Iter 2, ELBO=-72.91118, p(x|z)=-50.61358, p(y|z)=-1.22248, KL=21.07512, time=94.86
+Iter 3, ELBO=-72.89310, p(x|z)=-50.57789, p(y|z)=-1.22261, KL=21.09260, time=95.29
+Iter 4, ELBO=-72.84672, p(x|z)=-50.52215, p(y|z)=-1.21951, KL=21.10506, time=95.67
+Iter 5, ELBO=-72.82284, p(x|z)=-50.48426, p(y|z)=-1.21482, KL=21.12375, time=95.59
+Iter 6, ELBO=-72.76525, p(x|z)=-50.42377, p(y|z)=-1.20972, KL=21.13176, time=95.07
+Iter 7, ELBO=-72.74355, p(x|z)=-50.39382, p(y|z)=-1.20861, KL=21.14111, time=95.31
+Iter 8, ELBO=-72.71194, p(x|z)=-50.34304, p(y|z)=-1.20510, KL=21.16379, time=95.27
+Iter 9, ELBO=-72.68647, p(x|z)=-50.31130, p(y|z)=-1.20775, KL=21.16742, time=95.34
+Iter 10, ELBO=-72.62907, p(x|z)=-50.26477, p(y|z)=-1.19936, KL=21.16495, time=95.89
+test data approx Bayes classifier acc=50.19, logpxy=-78.46, bound=-75.86, time=1351.69, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-72.60340, p(x|z)=-50.21201, p(y|z)=-1.19762, KL=21.19377, time=254.84
+Iter 2, ELBO=-72.56851, p(x|z)=-50.16933, p(y|z)=-1.19501, KL=21.20417, time=380.52
+Iter 3, ELBO=-72.54895, p(x|z)=-50.14800, p(y|z)=-1.19691, KL=21.20404, time=369.58
+Iter 4, ELBO=-72.50178, p(x|z)=-50.06871, p(y|z)=-1.19039, KL=21.24268, time=342.26
+Iter 5, ELBO=-72.45851, p(x|z)=-50.03963, p(y|z)=-1.18911, KL=21.22977, time=292.83
+Iter 6, ELBO=-72.43234, p(x|z)=-50.00682, p(y|z)=-1.18525, KL=21.24026, time=260.41
+Iter 7, ELBO=-72.38883, p(x|z)=-49.93447, p(y|z)=-1.18677, KL=21.26759, time=268.06
+Iter 8, ELBO=-72.35739, p(x|z)=-49.89984, p(y|z)=-1.17841, KL=21.27913, time=267.59
+Iter 9, ELBO=-72.32608, p(x|z)=-49.86191, p(y|z)=-1.18095, KL=21.28322, time=282.63
+Iter 10, ELBO=-72.27168, p(x|z)=-49.80718, p(y|z)=-1.17521, KL=21.28929, time=268.41
+test data approx Bayes classifier acc=49.81, logpxy=-78.75, bound=-76.15, time=3437.82, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-72.24523, p(x|z)=-49.76962, p(y|z)=-1.16865, KL=21.30696, time=232.10
+Iter 2, ELBO=-72.20750, p(x|z)=-49.73656, p(y|z)=-1.17018, KL=21.30076, time=209.68
+Iter 3, ELBO=-72.15687, p(x|z)=-49.67239, p(y|z)=-1.16652, KL=21.31795, time=267.26
+Iter 4, ELBO=-72.13930, p(x|z)=-49.64954, p(y|z)=-1.16719, KL=21.32257, time=293.20
+Iter 5, ELBO=-72.11960, p(x|z)=-49.60463, p(y|z)=-1.16787, KL=21.34709, time=243.20
+Iter 6, ELBO=-72.07169, p(x|z)=-49.53650, p(y|z)=-1.15832, KL=21.37687, time=278.63
+Iter 7, ELBO=-72.03008, p(x|z)=-49.49206, p(y|z)=-1.15714, KL=21.38088, time=325.25
+Iter 8, ELBO=-72.00999, p(x|z)=-49.46698, p(y|z)=-1.15793, KL=21.38507, time=335.21
+Iter 9, ELBO=-71.95245, p(x|z)=-49.40009, p(y|z)=-1.15492, KL=21.39744, time=274.60
+Iter 10, ELBO=-71.91464, p(x|z)=-49.36922, p(y|z)=-1.14803, KL=21.39739, time=297.48
+test data approx Bayes classifier acc=49.83, logpxy=-78.94, bound=-76.25, time=4499.23, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-71.89043, p(x|z)=-49.34439, p(y|z)=-1.14920, KL=21.39685, time=195.96
+Iter 2, ELBO=-71.86272, p(x|z)=-49.29487, p(y|z)=-1.14795, KL=21.41990, time=204.61
+Iter 3, ELBO=-71.81957, p(x|z)=-49.23850, p(y|z)=-1.14248, KL=21.43859, time=201.83
+Iter 4, ELBO=-71.78186, p(x|z)=-49.20510, p(y|z)=-1.14452, KL=21.43224, time=197.93
+Iter 5, ELBO=-71.74100, p(x|z)=-49.13841, p(y|z)=-1.13864, KL=21.46394, time=183.84
+Iter 6, ELBO=-71.70577, p(x|z)=-49.09904, p(y|z)=-1.13179, KL=21.47494, time=190.75
+Iter 7, ELBO=-71.68358, p(x|z)=-49.05062, p(y|z)=-1.13974, KL=21.49323, time=179.41
+Iter 8, ELBO=-71.65147, p(x|z)=-49.01216, p(y|z)=-1.12935, KL=21.50996, time=179.95
+Iter 9, ELBO=-71.59991, p(x|z)=-48.97072, p(y|z)=-1.12728, KL=21.50191, time=181.05
+Iter 10, ELBO=-71.57479, p(x|z)=-48.91862, p(y|z)=-1.12358, KL=21.53259, time=192.73
+test data approx Bayes classifier acc=50.23, logpxy=-78.99, bound=-76.31, time=2830.30, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-71.54651, p(x|z)=-48.87178, p(y|z)=-1.12701, KL=21.54772, time=197.55
+Iter 2, ELBO=-71.48238, p(x|z)=-48.82555, p(y|z)=-1.11867, KL=21.53817, time=192.46
+Iter 3, ELBO=-71.44373, p(x|z)=-48.77587, p(y|z)=-1.11800, KL=21.54986, time=182.02
+Iter 4, ELBO=-71.42325, p(x|z)=-48.73665, p(y|z)=-1.11464, KL=21.57196, time=181.87
+Iter 5, ELBO=-71.38617, p(x|z)=-48.69216, p(y|z)=-1.11115, KL=21.58286, time=201.23
+Iter 6, ELBO=-71.34453, p(x|z)=-48.63318, p(y|z)=-1.11521, KL=21.59613, time=198.37
+Iter 7, ELBO=-71.32191, p(x|z)=-48.60412, p(y|z)=-1.10531, KL=21.61248, time=203.65
+Iter 8, ELBO=-71.27696, p(x|z)=-48.56949, p(y|z)=-1.10304, KL=21.60443, time=210.06
+Iter 9, ELBO=-71.24408, p(x|z)=-48.52236, p(y|z)=-1.10603, KL=21.61569, time=162.76
+Iter 10, ELBO=-71.20071, p(x|z)=-48.46111, p(y|z)=-1.09704, KL=21.64257, time=167.61
+test data approx Bayes classifier acc=50.31, logpxy=-79.25, bound=-76.57, time=2018.44, beta=1.00
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-71.15911, p(x|z)=-48.42174, p(y|z)=-1.10124, KL=21.63614, time=143.72
+Iter 2, ELBO=-71.14487, p(x|z)=-48.37218, p(y|z)=-1.09768, KL=21.67502, time=189.90
+Iter 3, ELBO=-71.10326, p(x|z)=-48.33453, p(y|z)=-1.09339, KL=21.67534, time=171.05
+Iter 4, ELBO=-71.06042, p(x|z)=-48.27429, p(y|z)=-1.08647, KL=21.69967, time=148.08
+Iter 5, ELBO=-71.01260, p(x|z)=-48.21917, p(y|z)=-1.08591, KL=21.70752, time=178.60
+Iter 6, ELBO=-70.99102, p(x|z)=-48.19544, p(y|z)=-1.08682, KL=21.70876, time=152.29
+Iter 7, ELBO=-70.94739, p(x|z)=-48.14847, p(y|z)=-1.08548, KL=21.71344, time=148.11
+Iter 8, ELBO=-70.91982, p(x|z)=-48.09294, p(y|z)=-1.08183, KL=21.74506, time=140.02
+Iter 9, ELBO=-70.89823, p(x|z)=-48.06437, p(y|z)=-1.08203, KL=21.75183, time=187.02
+Iter 10, ELBO=-70.83959, p(x|z)=-48.00842, p(y|z)=-1.07449, KL=21.75668, time=150.71
+test data approx Bayes classifier acc=50.27, logpxy=-79.52, bound=-76.70, time=1905.04, beta=1.00
+parameters saved at save/all_conv_vae_F_128/checkpoint_0.pkl
+decoder shared Conv Net of size [(4, 4, 256), (8, 8, 128), (16, 16, 64), (32, 32, 3)]
+encoder shared Conv net  network architecture: [(16, 16, 64), (8, 8, 128), (4, 4, 256)] [1000]
+param loaded 25
+assign to 25 tensors..
+no. of uninitialised variables 52 25
+loaded parameters from save/all_conv_vae_F_128/checkpoint_0.pkl
+training for 10 epochs with lr=0.00005, beta=1.00
+Iter 1, ELBO=-70.82458, p(x|z)=-47.97855, p(y|z)=-1.07398, KL=21.77204, time=120.03
+Iter 2, ELBO=-70.77164, p(x|z)=-47.90317, p(y|z)=-1.07157, KL=21.79690, time=113.45
+Iter 3, ELBO=-70.72083, p(x|z)=-47.87105, p(y|z)=-1.06437, KL=21.78542, time=120.86
+Iter 4, ELBO=-70.71218, p(x|z)=-47.82861, p(y|z)=-1.06342, KL=21.82015, time=110.50
+Iter 5, ELBO=-70.64976, p(x|z)=-47.76030, p(y|z)=-1.06468, KL=21.82479, time=102.75
+Iter 6, ELBO=-70.65302, p(x|z)=-47.75839, p(y|z)=-1.06245, KL=21.83218, time=115.96
+Iter 7, ELBO=-70.58984, p(x|z)=-47.68956, p(y|z)=-1.05944, KL=21.84084, time=105.70
+Iter 8, ELBO=-70.57161, p(x|z)=-47.64266, p(y|z)=-1.05814, KL=21.87081, time=113.42
+Iter 9, ELBO=-70.54174, p(x|z)=-47.61860, p(y|z)=-1.05524, KL=21.86791, time=105.91
+Iter 10, ELBO=-70.49915, p(x|z)=-47.55191, p(y|z)=-1.04847, KL=21.89876, time=121.42

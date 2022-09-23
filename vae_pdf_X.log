@@ -1,0 +1,155 @@
+PDF X_train shape: (13190, 3514)
+PDF X_test shape: (6146, 3514)
+PDF X_attack shape: (1600, 3514)
+training from scratch
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-1897.67777, p(x|z)=-1894.26550, KL=3.41230, time=3.46
+Iter 2, ELBO=-525.13931, p(x|z)=-495.30591, KL=29.83341, time=3.27
+Iter 3, ELBO=-216.82452, p(x|z)=-193.69325, KL=23.13127, time=3.10
+Iter 4, ELBO=-170.89581, p(x|z)=-164.46618, KL=6.42964, time=2.99
+Iter 5, ELBO=-163.52072, p(x|z)=-159.52967, KL=3.99106, time=2.81
+Iter 6, ELBO=-158.53787, p(x|z)=-154.65873, KL=3.87914, time=2.85
+Iter 7, ELBO=-152.96679, p(x|z)=-147.97580, KL=4.99099, time=3.34
+Iter 8, ELBO=-148.09504, p(x|z)=-141.30081, KL=6.79423, time=3.08
+Iter 9, ELBO=-143.64847, p(x|z)=-136.99868, KL=6.64978, time=3.70
+Iter 10, ELBO=-138.49354, p(x|z)=-131.44508, KL=7.04846, time=3.52
+train data approx log likelihood logpx=-134.25, bound=-134.26, time=50.42, beta=1.00
+test data approx log likelihood logpx=-131.82, bound=-131.82, time=22.54, beta=1.00
+attack data approx log likelihood logpx=-292.81, bound=-292.74, time=3.96, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-132.10591, p(x|z)=-124.15022, KL=7.95569, time=2.91
+Iter 2, ELBO=-125.74480, p(x|z)=-117.16304, KL=8.58175, time=3.09
+Iter 3, ELBO=-120.19067, p(x|z)=-111.77138, KL=8.41928, time=2.96
+Iter 4, ELBO=-115.70106, p(x|z)=-107.70621, KL=7.99486, time=3.17
+Iter 5, ELBO=-112.43716, p(x|z)=-104.43725, KL=7.99991, time=3.44
+Iter 6, ELBO=-109.11124, p(x|z)=-100.70677, KL=8.40447, time=3.14
+Iter 7, ELBO=-107.05442, p(x|z)=-98.14147, KL=8.91295, time=2.88
+Iter 8, ELBO=-105.39879, p(x|z)=-96.44593, KL=8.95286, time=2.80
+Iter 9, ELBO=-103.88059, p(x|z)=-94.90867, KL=8.97192, time=2.86
+Iter 10, ELBO=-102.97917, p(x|z)=-93.76378, KL=9.21539, time=3.15
+train data approx log likelihood logpx=-101.02, bound=-101.19, time=53.13, beta=1.00
+test data approx log likelihood logpx=-99.77, bound=-99.68, time=25.28, beta=1.00
+attack data approx log likelihood logpx=-299.23, bound=-299.36, time=3.99, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-101.39804, p(x|z)=-92.10222, KL=9.29582, time=5.12
+Iter 2, ELBO=-100.51213, p(x|z)=-91.13262, KL=9.37951, time=5.54
+Iter 3, ELBO=-99.48968, p(x|z)=-89.89079, KL=9.59888, time=5.93
+Iter 4, ELBO=-98.35008, p(x|z)=-88.58448, KL=9.76560, time=5.84
+Iter 5, ELBO=-97.41562, p(x|z)=-87.61818, KL=9.79745, time=5.64
+Iter 6, ELBO=-96.09543, p(x|z)=-86.08478, KL=10.01064, time=5.81
+Iter 7, ELBO=-95.26628, p(x|z)=-85.26434, KL=10.00193, time=5.62
+Iter 8, ELBO=-94.35088, p(x|z)=-84.10546, KL=10.24541, time=5.69
+Iter 9, ELBO=-93.26191, p(x|z)=-82.79915, KL=10.46276, time=5.70
+Iter 10, ELBO=-91.97613, p(x|z)=-81.49738, KL=10.47876, time=5.65
+train data approx log likelihood logpx=-90.63, bound=-90.59, time=94.34, beta=1.00
+test data approx log likelihood logpx=-89.56, bound=-89.50, time=41.96, beta=1.00
+attack data approx log likelihood logpx=-301.35, bound=-301.11, time=6.72, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-91.29237, p(x|z)=-80.42680, KL=10.86557, time=6.70
+Iter 2, ELBO=-89.89601, p(x|z)=-78.88133, KL=11.01467, time=6.53
+Iter 3, ELBO=-88.52135, p(x|z)=-77.39887, KL=11.12248, time=6.33
+Iter 4, ELBO=-87.43584, p(x|z)=-76.02893, KL=11.40690, time=6.43
+Iter 5, ELBO=-85.67945, p(x|z)=-73.95575, KL=11.72370, time=7.06
+Iter 6, ELBO=-84.00608, p(x|z)=-72.10407, KL=11.90201, time=7.45
+Iter 7, ELBO=-82.12419, p(x|z)=-69.84948, KL=12.27471, time=7.48
+Iter 8, ELBO=-80.16179, p(x|z)=-67.39733, KL=12.76446, time=7.29
+Iter 9, ELBO=-78.33361, p(x|z)=-65.31598, KL=13.01763, time=7.74
+Iter 10, ELBO=-76.66188, p(x|z)=-63.51238, KL=13.14950, time=7.52
+train data approx log likelihood logpx=-74.62, bound=-74.74, time=88.09, beta=1.00
+test data approx log likelihood logpx=-74.16, bound=-74.07, time=33.77, beta=1.00
+attack data approx log likelihood logpx=-301.79, bound=-302.43, time=5.37, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-74.57172, p(x|z)=-61.08832, KL=13.48340, time=5.51
+Iter 2, ELBO=-73.44425, p(x|z)=-59.93089, KL=13.51336, time=5.70
+Iter 3, ELBO=-71.18783, p(x|z)=-57.61409, KL=13.57375, time=5.71
+Iter 4, ELBO=-70.08571, p(x|z)=-56.46493, KL=13.62078, time=5.58
+Iter 5, ELBO=-68.75116, p(x|z)=-55.15473, KL=13.59644, time=6.04
+Iter 6, ELBO=-67.83990, p(x|z)=-54.14717, KL=13.69274, time=7.05
+Iter 7, ELBO=-66.74170, p(x|z)=-52.90821, KL=13.83349, time=7.01
+Iter 8, ELBO=-65.65128, p(x|z)=-51.90676, KL=13.74451, time=7.17
+Iter 9, ELBO=-64.46524, p(x|z)=-50.69826, KL=13.76698, time=7.67
+Iter 10, ELBO=-63.72179, p(x|z)=-49.94007, KL=13.78172, time=7.51
+train data approx log likelihood logpx=-62.78, bound=-62.75, time=95.02, beta=1.00
+test data approx log likelihood logpx=-62.59, bound=-62.68, time=41.85, beta=1.00
+attack data approx log likelihood logpx=-302.87, bound=-300.01, time=6.77, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-63.13907, p(x|z)=-49.38003, KL=13.75903, time=6.34
+Iter 2, ELBO=-62.22973, p(x|z)=-48.40530, KL=13.82443, time=6.80
+Iter 3, ELBO=-61.77996, p(x|z)=-47.86269, KL=13.91726, time=6.67
+Iter 4, ELBO=-60.95401, p(x|z)=-46.94051, KL=14.01351, time=6.79
+Iter 5, ELBO=-60.59139, p(x|z)=-46.63670, KL=13.95469, time=6.35
+Iter 6, ELBO=-59.96032, p(x|z)=-45.92804, KL=14.03228, time=6.66
+Iter 7, ELBO=-59.41110, p(x|z)=-45.18985, KL=14.22124, time=7.02
+Iter 8, ELBO=-58.75083, p(x|z)=-44.76630, KL=13.98453, time=6.70
+Iter 9, ELBO=-58.29866, p(x|z)=-44.03193, KL=14.26673, time=6.72
+Iter 10, ELBO=-57.66895, p(x|z)=-43.56188, KL=14.10708, time=6.95
+train data approx log likelihood logpx=-56.70, bound=-56.81, time=70.61, beta=1.00
+test data approx log likelihood logpx=-56.73, bound=-56.73, time=37.50, beta=1.00
+attack data approx log likelihood logpx=-298.83, bound=-300.39, time=7.50, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-56.98288, p(x|z)=-42.68342, KL=14.29946, time=7.60
+Iter 2, ELBO=-56.32256, p(x|z)=-42.26540, KL=14.05716, time=6.87
+Iter 3, ELBO=-56.01801, p(x|z)=-41.81646, KL=14.20156, time=7.51
+Iter 4, ELBO=-55.62667, p(x|z)=-41.25430, KL=14.37237, time=7.72
+Iter 5, ELBO=-54.83574, p(x|z)=-40.58644, KL=14.24930, time=7.52
+Iter 6, ELBO=-54.62296, p(x|z)=-40.27787, KL=14.34510, time=7.33
+Iter 7, ELBO=-54.10150, p(x|z)=-39.76610, KL=14.33540, time=7.08
+Iter 8, ELBO=-53.62746, p(x|z)=-39.24506, KL=14.38240, time=7.44
+Iter 9, ELBO=-53.48866, p(x|z)=-39.02034, KL=14.46832, time=6.79
+Iter 10, ELBO=-53.13329, p(x|z)=-38.63681, KL=14.49648, time=7.73
+train data approx log likelihood logpx=-52.23, bound=-52.42, time=94.43, beta=1.00
+test data approx log likelihood logpx=-52.54, bound=-52.75, time=43.79, beta=1.00
+attack data approx log likelihood logpx=-296.96, bound=-296.00, time=6.62, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-52.56103, p(x|z)=-38.04816, KL=14.51287, time=6.58
+Iter 2, ELBO=-52.23468, p(x|z)=-37.65735, KL=14.57733, time=7.20
+Iter 3, ELBO=-52.14673, p(x|z)=-37.43009, KL=14.71664, time=7.62
+Iter 4, ELBO=-51.47818, p(x|z)=-36.77600, KL=14.70218, time=5.33
+Iter 5, ELBO=-50.99453, p(x|z)=-36.53767, KL=14.45687, time=5.29
+Iter 6, ELBO=-50.57852, p(x|z)=-36.03252, KL=14.54600, time=5.16
+Iter 7, ELBO=-50.40267, p(x|z)=-35.83552, KL=14.56715, time=5.07
+Iter 8, ELBO=-50.50122, p(x|z)=-35.88732, KL=14.61390, time=5.14
+Iter 9, ELBO=-49.87360, p(x|z)=-35.09945, KL=14.77415, time=5.21
+Iter 10, ELBO=-49.60986, p(x|z)=-34.97613, KL=14.63372, time=5.29
+train data approx log likelihood logpx=-49.16, bound=-49.32, time=88.45, beta=1.00
+test data approx log likelihood logpx=-49.53, bound=-49.64, time=44.37, beta=1.00
+attack data approx log likelihood logpx=-294.09, bound=-293.45, time=7.18, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-49.37867, p(x|z)=-34.74411, KL=14.63456, time=6.84
+Iter 2, ELBO=-49.19615, p(x|z)=-34.39289, KL=14.80326, time=7.63
+Iter 3, ELBO=-49.08650, p(x|z)=-34.27640, KL=14.81009, time=7.79
+Iter 4, ELBO=-48.63310, p(x|z)=-33.86344, KL=14.76966, time=7.34
+Iter 5, ELBO=-48.68977, p(x|z)=-33.87252, KL=14.81725, time=7.62
+Iter 6, ELBO=-48.40381, p(x|z)=-33.59344, KL=14.81036, time=7.11
+Iter 7, ELBO=-48.17349, p(x|z)=-33.18255, KL=14.99094, time=6.31
+Iter 8, ELBO=-47.89426, p(x|z)=-32.85962, KL=15.03464, time=6.71
+Iter 9, ELBO=-47.75206, p(x|z)=-32.85228, KL=14.89977, time=7.05
+Iter 10, ELBO=-47.27459, p(x|z)=-32.48892, KL=14.78567, time=7.02
+train data approx log likelihood logpx=-46.82, bound=-46.68, time=91.55, beta=1.00
+test data approx log likelihood logpx=-47.19, bound=-47.22, time=33.01, beta=1.00
+attack data approx log likelihood logpx=-294.21, bound=-294.79, time=5.23, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+training for 10 epochs with lr=0.00010, beta=1.00
+Iter 1, ELBO=-47.30290, p(x|z)=-32.39271, KL=14.91019, time=5.25
+Iter 2, ELBO=-47.00999, p(x|z)=-32.10894, KL=14.90105, time=5.32
+Iter 3, ELBO=-46.88622, p(x|z)=-32.00789, KL=14.87833, time=5.36
+Iter 4, ELBO=-46.81192, p(x|z)=-31.75967, KL=15.05225, time=5.20
+Iter 5, ELBO=-46.39951, p(x|z)=-31.46979, KL=14.92972, time=5.12
+Iter 6, ELBO=-46.15348, p(x|z)=-31.16688, KL=14.98660, time=6.36
+Iter 7, ELBO=-46.21146, p(x|z)=-31.40935, KL=14.80210, time=7.21
+Iter 8, ELBO=-46.04432, p(x|z)=-31.02398, KL=15.02034, time=7.43
+Iter 9, ELBO=-45.82114, p(x|z)=-30.93024, KL=14.89090, time=7.46
+Iter 10, ELBO=-45.73709, p(x|z)=-30.73461, KL=15.00248, time=7.23
+train data approx log likelihood logpx=-45.14, bound=-45.01, time=94.19, beta=1.00
+test data approx log likelihood logpx=-45.64, bound=-45.64, time=43.59, beta=1.00
+attack data approx log likelihood logpx=-296.55, bound=-296.53, time=6.61, beta=1.00
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl
+parameters saved at save/pdf_conv_vae_X_512_beta_1_ll_xe/checkpoint_0.pkl

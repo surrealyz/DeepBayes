@@ -10,6 +10,28 @@ def logsumexp(x):
     tmp = tf.log(tf.clip_by_value(tf.reduce_sum(tf.exp(x_), 0), 1e-9, np.inf))
     return tmp + x_max
 
+def probxy(x, enc, dec, ll, dimY, lowerbound, K = 1, beta=1.0, categorical=False):
+    enc_conv, enc_mlp = enc
+    fea = enc_conv(x)
+    N = x.get_shape().as_list()[0]
+    logpxy = []
+    for i in range(dimY):
+
+        y = np.zeros([N, dimY])
+        y[:, i] = 1
+        y = tf.constant(np.asarray(y, dtype='f'))
+
+        bound_sum=0
+        mctimes=50
+        for jj in range(mctimes):
+            bound, debug_list = lowerbound(x, fea, y, enc_mlp, dec, ll, K, IS=True, beta=beta, categorical=categorical)
+            bound_sum += bound
+
+        logpxy.append(tf.expand_dims(bound_sum/mctimes, 1))
+    logpxy = tf.concat(logpxy, 1)
+    return logpxy
+
+
 def bayes_classifier(x, enc, dec, ll, dimY, lowerbound, K = 1, beta=1.0, categorical=False):
     enc_conv, enc_mlp = enc
     fea = enc_conv(x)
@@ -30,7 +52,7 @@ def bayes_classifier(x, enc, dec, ll, dimY, lowerbound, K = 1, beta=1.0, categor
         logpxy.append(tf.expand_dims(bound_sum/mctimes, 1))
     logpxy = tf.concat(logpxy, 1)
     pyx = tf.nn.softmax(logpxy)
-    return pyx
+    return logpxy, pyx
 
 
 # def y_classifier_using_z_x(x, enc, dec, l1, dimY):
@@ -79,9 +101,10 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A', categorical=F
 
     # also evaluate approx Bayes classifier's accuracy
     dimY = Y_ph.get_shape().as_list()[-1]
-    y_pred = bayes_classifier(X_, enc, dec, ll_, dimY, lowerbound_func, K=10, beta=beta_ph, categorical=categorical) # TODO: weired
+    logpxy, y_pred = bayes_classifier(X_, enc, dec, ll_, dimY, lowerbound_func, K=10, beta=beta_ph, categorical=categorical) # TODO: weired
     correct_prediction = tf.equal(tf.argmax(Y_ph,1), tf.argmax(y_pred,1))
     acc_train = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    logprob = tf.reduce_mean(tf.cast(logpxy, tf.float32))
 
     # now construct optimizers
     lr_ph = tf.placeholder(tf.float32, shape=())
@@ -164,18 +187,20 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A', categorical=F
         n_batch = int(N / batch_size)
         acc_total = 0.0
         bound_total = 0.0
+        logprob_sum = 0.0
         for j in range(0, n_batch):
             indl = j * batch_size
             indr = min((j+1) * batch_size, N)
-            res1, res2 = sess.run((acc_train, bound), feed_dict={X_ph:X[indl:indr],
+            res_logpxy, res_logprob, res1, res2 = sess.run((logpxy, logprob, acc_train, bound), feed_dict={X_ph:X[indl:indr],
                                                                  Y_ph: Y[indl:indr],
                                                                  # x_cat: X_categorical[indl:indr],
                                                                  beta_ph: beta})
             acc_total += res1 / n_batch
             bound_total += res2 / n_batch
+            logprob_sum += res_logprob / n_batch
         end = time.time()
-        print("%s data approx Bayes classifier acc=%.2f, bound=%.2f, time=%.2f, beta=%.2f" \
-              % (data_name, acc_total*100, bound_total, end - begin, beta))
+        print("%s data approx Bayes classifier acc=%.2f, logpxy=%.2f, bound=%.2f, time=%.2f, beta=%.2f" \
+              % (data_name, acc_total*100, logprob_sum, bound_total, end - begin, beta))
         return acc_total, bound_total
 
     def eval(sess, X, Y, data_name = 'train', beta=1.0):
@@ -184,17 +209,19 @@ def construct_optimizer(X_ph, Y_ph, enc, dec, ll, K, vae_type='A', categorical=F
         n_batch = int(N / batch_size)
         acc_total = 0.0
         bound_total = 0.0
+        logprob_sum = 0.0
         for j in range(0, n_batch):
             indl = j * batch_size
             indr = min((j+1) * batch_size, N)
-            res1, res2 = sess.run((acc_train, bound), feed_dict={X_ph:X[indl:indr], 
+            res_logpxy, res_logprob, res1, res2 = sess.run((logpxy, logprob, acc_train, bound), feed_dict={X_ph:X[indl:indr], 
                                                                  Y_ph: Y[indl:indr],
                                                                  beta_ph: beta})   
             acc_total += res1 / n_batch
             bound_total += res2 / n_batch
+            logprob_sum += res_logprob / n_batch
         end = time.time()
-        print("%s data approx Bayes classifier acc=%.2f, bound=%.2f, time=%.2f, beta=%.2f" \
-              % (data_name, acc_total*100, bound_total, end - begin, beta))
+        print("%s data approx Bayes classifier acc=%.2f, logpxy=%.2f, bound=%.2f, time=%.2f, beta=%.2f" \
+              % (data_name, acc_total*100, logprob_sum, bound_total, end - begin, beta))
         return acc_total, bound_total
 
     if categorical:

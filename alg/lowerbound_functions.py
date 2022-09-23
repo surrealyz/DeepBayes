@@ -346,7 +346,7 @@ def lowerbound_F(x, fea, y, enc_mlp, dec, ll, K=1, IS=False,
     logit_y = pyz(z)
     log_pyz = -tf.nn.softmax_cross_entropy_with_logits(labels=y_rep, logits=logit_y) 
 
-    print('shape ', logpx.shape, log_pyz.shape, (log_prior_z - logq).shape)
+    #print('shape ', logpx.shape, log_pyz.shape, (log_prior_z - logq).shape)
     #bound = logp + log_pyzx + beta * (log_prior_z - logq)
     lambda_y = 1
     bound = logpx + lambda_y * log_pyz + beta * (log_prior_z - logq)  #TODO: this is ELBO, need to be maximized

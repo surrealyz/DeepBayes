@@ -10,7 +10,7 @@ from alg.vae_new import construct_optimizer
 
 dimZ = 512
 dimH = 1024
-n_iter = 300
+n_iter = 20
 batch_size = 1000
 lr = 1e-4
 K = 1
@@ -21,7 +21,8 @@ global lambda_y
 
 def main(data_name, vae_type, dimZ, dimH, n_iter, batch_size, K, checkpoint, categorical=False, bin_num=128):
     # load data
-    beta = 0.001  # here beta
+    #beta = 0.01  # here beta
+    beta = 0.1  # here beta
 
     from utils_spam import data_spam
     X_train, Y_train, X_test, Y_test = data_spam(train_start=0, train_end=295870,
